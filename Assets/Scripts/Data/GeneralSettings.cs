@@ -13,5 +13,6 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	static void Select() => Selection.activeObject = Get();
 #endif
 
-	// [Header(nameof())]
+	[Header(nameof(ProjectManager))]
+	public string projectRootKey;
 }

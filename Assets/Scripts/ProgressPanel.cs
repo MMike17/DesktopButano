@@ -33,6 +33,7 @@ public class ProgressPanel : Panel
 		if (running)
 		{
 			float progress = GetProgress();
+			Debug.Log(progress);
 			progressSlider.value = progress;
 			progressText.text = Mathf.FloorToInt(progress * 100) + "%";
 

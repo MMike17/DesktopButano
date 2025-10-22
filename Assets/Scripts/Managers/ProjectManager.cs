@@ -112,23 +112,29 @@ public class ProjectManager : MonoBehaviour
 		if (new DirectoryInfo(butanoPathInput.text).GetDirectories("butano").Length == 0)
 		{
 			// TODO : Refactor this for engine update
-			string tempPath = Path.Combine(Application.temporaryCachePath, "butanoInstall.zip");
+			string tempPath = Path.Combine(Application.temporaryCachePath, "butanoInstall");
 
-			UnityWebRequest request = UnityWebRequest.Get(settings.projectButanoURL + ".zip");
-			request.downloadHandler = new DownloadHandlerFile(tempPath);
-			GetButanoLatestVersion(version => GeneralManager.PopProgress(
-				"Installing Butano " + version,
-				() => request.downloadProgress,
-				CheckPaths)
-			);
-
-			request.SendWebRequest().completed += op =>
+			GetButanoLatestVersion(version =>
 			{
-				if (request.result != UnityWebRequest.Result.Success)
-					GeneralManager.PopError("Couldn't retrieve butano version\n" + request.error);
-				else
-					ZipFile.ExtractToDirectory(tempPath, butanoPathInput.text);
-			};
+				UnityWebRequest request = UnityWebRequest.Get(settings.projectButanoURLDownload + version + ".zip");
+				request.downloadHandler = new DownloadHandlerFile(tempPath);
+				GeneralManager.PopProgress("Installing Butano " + version, () => request.downloadProgress, CheckPaths);
+
+				request.SendWebRequest().completed += op =>
+				{
+					if (request.result != UnityWebRequest.Result.Success)
+					{
+						GeneralManager.PopError(
+							"Couldn't retrieve butano version\n" + request.error + "\n(" + request.url + ")"
+						);
+					}
+					else
+					{
+						ZipFile.ExtractToDirectory(tempPath, butanoPathInput.text);
+						CheckPaths();
+					}
+				};
+			});
 		}
 
 		CheckPaths();
@@ -141,14 +147,8 @@ public class ProjectManager : MonoBehaviour
 
 	private void GetButanoLatestVersion(Action<string> OnDone)
 	{
-		UnityWebRequest request = UnityWebRequest.Get(settings.projectButanoURL);
-		request.SendWebRequest().completed += op =>
-		{
-			if (request.result != UnityWebRequest.Result.Success)
-				GeneralManager.PopError("Couldn't retrieve butano version\n" + request.error);
-			else
-				OnDone?.Invoke(request.url.Split('/')[^1]);
-		};
+		UnityWebRequest request = UnityWebRequest.Get(settings.projectButanoURLVersion);
+		request.SendWebRequest().completed += op => OnDone?.Invoke(request.url.Split('/')[^1]);
 	}
 
 	public void CheckPaths()

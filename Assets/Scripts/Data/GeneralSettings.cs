@@ -18,5 +18,7 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public string projectButanoKey;
 	[Space]
 	[TextArea]
-	public string projectButanoURL;
+	public string projectButanoURLVersion;
+	[TextArea]
+	public string projectButanoURLDownload;
 }

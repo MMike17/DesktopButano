@@ -1,5 +1,8 @@
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 /// <summary>Scriptable objects that should have a static accessor in the editor</summary>
 public class EditorScriptableObject<T> : ScriptableObject where T : ScriptableObject
@@ -10,12 +13,14 @@ public class EditorScriptableObject<T> : ScriptableObject where T : ScriptableOb
 	{
 		if (instance == null)
 		{
+#if UNITY_EDITOR
 			string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);
 
 			if (guids.Length == 0)
 				Debug.LogError("Couldn't find instance of " + typeof(T).Name + " in assets. Please create one.");
 			else
 				instance = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guids[0]));
+#endif
 		}
 
 		return instance;

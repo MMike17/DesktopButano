@@ -1,7 +1,10 @@
+using System;
 using System.IO;
+using System.IO.Compression;
 using SimpleFileBrowser;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 /// <summary>Manages projects</summary>
@@ -78,6 +81,7 @@ public class ProjectManager : MonoBehaviour
 		}
 
 		PlayerPrefs.SetString(settings.projectRootKey, rootPathInput.text);
+		PlayerPrefs.Save();
 		CheckPaths();
 	}
 
@@ -103,19 +107,53 @@ public class ProjectManager : MonoBehaviour
 			return;
 		}
 
+		PlayerPrefs.SetString(settings.projectButanoKey, butanoPathInput.text);
+
 		if (new DirectoryInfo(butanoPathInput.text).GetDirectories("butano").Length == 0)
 		{
-			// install
-			// TODO : Download butano from github and place it here
+			// TODO : Refactor this for engine update
+			string tempPath = Path.Combine(Application.temporaryCachePath, "butanoInstall.zip");
+
+			UnityWebRequest request = UnityWebRequest.Get(settings.projectButanoURL + ".zip");
+			request.downloadHandler = new DownloadHandlerFile(tempPath);
+			GetButanoLatestVersion(version => GeneralManager.PopProgress(
+				"Installing Butano " + version,
+				() => request.downloadProgress,
+				CheckPaths)
+			);
+
+			request.SendWebRequest().completed += op =>
+			{
+				if (request.result != UnityWebRequest.Result.Success)
+					GeneralManager.PopError("Couldn't retrieve butano version\n" + request.error);
+				else
+					ZipFile.ExtractToDirectory(tempPath, butanoPathInput.text);
+			};
 		}
 
-		PlayerPrefs.SetString(settings.projectRootKey, rootPathInput.text);
 		CheckPaths();
+	}
+
+	private string GetButanoLocalVersion()
+	{
+		return new DirectoryInfo(PlayerPrefs.GetString(settings.projectButanoKey)).Name.Replace("butano-", "");
+	}
+
+	private void GetButanoLatestVersion(Action<string> OnDone)
+	{
+		UnityWebRequest request = UnityWebRequest.Get(settings.projectButanoURL);
+		request.SendWebRequest().completed += op =>
+		{
+			if (request.result != UnityWebRequest.Result.Success)
+				GeneralManager.PopError("Couldn't retrieve butano version\n" + request.error);
+			else
+				OnDone?.Invoke(request.url.Split('/')[^1]);
+		};
 	}
 
 	public void CheckPaths()
 	{
-		if (!PlayerPrefs.HasKey(settings.projectRootKey) || !Directory.Exists(PlayerPrefs.GetString(settings.projectRootKey)))
+		if (!PlayerPrefs.HasKey(settings.projectRootKey) || !Directory.Exists(PlayerPrefs.GetString(settings.projectRootKey).Replace('/', '\\')))
 		{
 			AskForRoot();
 			return;

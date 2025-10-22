@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,13 +14,19 @@ public class ErrorPanel : Panel
 	{
 		overrides = false;
 		fullScreen = false;
-
-		closeButton.onClick.AddListener(() => gameObject.SetActive(false));
 	}
 
-	public void Pop(string text)
+	public void Pop(string text, Action OnClick)
 	{
 		messageText.text = text;
+
+		closeButton.onClick.RemoveAllListeners();
+		closeButton.onClick.AddListener(() =>
+		{
+			OnClick?.Invoke();
+			gameObject.SetActive(false);
+		});
+
 		base.Pop();
 	}
 }

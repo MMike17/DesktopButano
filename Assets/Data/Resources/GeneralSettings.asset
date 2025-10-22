@@ -14,5 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectRootKey: Root_path
   projectButanoKey: Butano_path
-  projectVersionFormat: 
-  projectVersionKey: Butano_version
+  projectButanoURL: https://github.com/GValiente/butano/releases/latest

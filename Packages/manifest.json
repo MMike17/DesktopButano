@@ -1,9 +1,8 @@
 {
   "dependencies": {
+    "com.unity.ide.visualstudio": "2.0.25",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.textmeshpro": "3.0.9",
-	"com.unity.serialization": "3.1.5",
-	"com.unity.burst": "1.8.25",
     "com.unity.ugui": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.director": "1.0.0",

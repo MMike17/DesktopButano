@@ -19,10 +19,7 @@ public class GeneralManager : MonoBehaviour
 		instance = this;
 		settings = GeneralSettings.Get();
 
-		if (projectsPanel.CheckHasRootPath())
-			projectsPanel.DisplayProjects();
-		else
-			projectsPanel.AskForRoot();
+		projectsPanel.CheckPaths();
 	}
 
 	public static void PopError(string message) => instance.errorPanel.Pop(message);

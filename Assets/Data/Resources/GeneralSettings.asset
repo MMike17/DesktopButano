@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5f1e6c653a027498d2afd0c54c860f, type: 3}
   m_Name: GeneralSettings
   m_EditorClassIdentifier: 
-  projectRootKey: Root_folder
+  projectRootKey: Root_path
+  projectButanoKey: Butano_path
+  projectVersionFormat: 
+  projectVersionKey: Butano_version

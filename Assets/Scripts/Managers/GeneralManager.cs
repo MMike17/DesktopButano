@@ -13,6 +13,7 @@ public class GeneralManager : MonoBehaviour
 	[Space]
 	public ErrorPanel errorPanel;
 	public ProgressPanel progressPanel;
+	public ChoicePanel choicePanel;
 
 	private GeneralSettings settings;
 
@@ -20,6 +21,7 @@ public class GeneralManager : MonoBehaviour
 	{
 		instance = this;
 		settings = GeneralSettings.Get();
+		Skinning.Init(settings.skin);
 
 		foreach (Panel panel in FindObjectsByType<Panel>(FindObjectsSortMode.None))
 			panel.gameObject.SetActive(false);
@@ -38,4 +40,6 @@ public class GeneralManager : MonoBehaviour
 	{
 		instance.progressPanel.Pop(title, checkDone, onDone);
 	}
+
+	public static void PopChoice(string message, Action onNo, Action onYes) => instance.choicePanel.Pop(message, onNo, onYes);
 }

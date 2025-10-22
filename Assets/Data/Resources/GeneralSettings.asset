@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5f1e6c653a027498d2afd0c54c860f, type: 3}
   m_Name: GeneralSettings
   m_EditorClassIdentifier: 
+  skin: {fileID: 11400000, guid: 51bc573fe3bcd02488eb22cf127aadfa, type: 2}
   popupProgressSpeed: 0.3
   popupProgressSpeedSlow: 0.2
   popupProgressCheck: 0.7
@@ -19,3 +20,9 @@ MonoBehaviour:
   projectButanoKey: Butano_path
   projectButanoURLVersion: https://github.com/GValiente/butano/releases/latest
   projectButanoURLDownload: https://github.com/GValiente/butano/archive/refs/tags/
+  projectVersionFormat: 'Local Butano version is {0} but the latest is {1}.
+
+    Do
+    you want to update the Butano version ?'
+  projectVersionOkTag: 6
+  projectVersionNoTag: 7

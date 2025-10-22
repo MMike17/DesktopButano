@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Skinning;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,6 +15,8 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 #endif
 
 	[Header(nameof(GeneralManager))]
+	public SkinData skin;
+	[Space]
 	public float popupProgressSpeed;
 	public float popupProgressSpeedSlow;
 	[Range(0, 1)]
@@ -27,4 +30,10 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public string projectButanoURLVersion;
 	[TextArea]
 	public string projectButanoURLDownload;
+	[Space]
+	[TextArea]
+	public string projectVersionFormat;
+	[Space]
+	public SkinTag projectVersionOkTag;
+	public SkinTag projectVersionNoTag;
 }

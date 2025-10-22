@@ -26,8 +26,8 @@ MonoBehaviour:
   - tag: 5
     color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   - tag: 6
-    color: {r: 0.5, g: 1, b: 0.5, a: 1}
+    color: {r: 0.3, g: 1, b: 0.3, a: 1}
   - tag: 7
-    color: {r: 1, g: 0.5, b: 0.5, a: 1}
+    color: {r: 1, g: 0.3, b: 0.3, a: 1}
   - tag: 8
     color: {r: 1, g: 1, b: 1, a: 1}

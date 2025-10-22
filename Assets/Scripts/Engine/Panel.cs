@@ -9,7 +9,7 @@ public class Panel : MonoBehaviour
 	public bool overrides;
 	public bool fullScreen;
 
-	public void Pop()
+	public virtual void Pop()
 	{
 		if (fullScreen && !overrides)
 			overrides = true;

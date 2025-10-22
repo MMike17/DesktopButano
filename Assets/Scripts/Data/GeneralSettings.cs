@@ -15,4 +15,8 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 
 	[Header(nameof(ProjectManager))]
 	public string projectRootKey;
+	public string projectButanoKey;
+	[TextArea]
+	public string projectVersionFormat;
+	public string projectVersionKey;
 }

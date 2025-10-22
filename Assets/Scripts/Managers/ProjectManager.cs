@@ -95,7 +95,13 @@ public class ProjectManager : MonoBehaviour
 		if (!Directory.Exists(path))
 			return false;
 
-		return new DirectoryInfo(path).GetDirectories("butano").Length > 0;
+		foreach (DirectoryInfo info in new DirectoryInfo(path).GetDirectories())
+		{
+			if (info.Name.Contains("butano"))
+				return true;
+		}
+
+		return false;
 	}
 
 	private void SaveButano()
@@ -118,7 +124,11 @@ public class ProjectManager : MonoBehaviour
 			{
 				UnityWebRequest request = UnityWebRequest.Get(settings.projectButanoURLDownload + version + ".zip");
 				request.downloadHandler = new DownloadHandlerFile(tempPath);
-				GeneralManager.PopProgress("Installing Butano " + version, () => request.downloadProgress, CheckPaths);
+				GeneralManager.PopProgress(
+					"Installing Butano " + version,
+					() => (request.uploadProgress + request.downloadProgress) / 2 >= 1,
+					CheckPaths
+				);
 
 				request.SendWebRequest().completed += op =>
 				{
@@ -153,7 +163,7 @@ public class ProjectManager : MonoBehaviour
 
 	public void CheckPaths()
 	{
-		if (!PlayerPrefs.HasKey(settings.projectRootKey) || !Directory.Exists(PlayerPrefs.GetString(settings.projectRootKey).Replace('/', '\\')))
+		if (!PlayerPrefs.HasKey(settings.projectRootKey) || !Directory.Exists(PlayerPrefs.GetString(settings.projectRootKey)))
 		{
 			AskForRoot();
 			return;

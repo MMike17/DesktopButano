@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5f1e6c653a027498d2afd0c54c860f, type: 3}
   m_Name: GeneralSettings
   m_EditorClassIdentifier: 
+  popupProgressSpeed: 0.3
+  popupProgressSpeedSlow: 0.2
+  popupProgressCheck: 0.7
   projectRootKey: Root_path
   projectButanoKey: Butano_path
   projectButanoURLVersion: https://github.com/GValiente/butano/releases/latest

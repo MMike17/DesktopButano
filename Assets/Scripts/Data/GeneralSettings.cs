@@ -13,6 +13,12 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	static void Select() => Selection.activeObject = Get();
 #endif
 
+	[Header(nameof(GeneralManager))]
+	public float popupProgressSpeed;
+	public float popupProgressSpeedSlow;
+	[Range(0, 1)]
+	public float popupProgressCheck;
+
 	[Header(nameof(ProjectManager))]
 	public string projectRootKey;
 	public string projectButanoKey;

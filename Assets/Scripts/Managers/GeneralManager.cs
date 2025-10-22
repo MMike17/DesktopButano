@@ -21,6 +21,9 @@ public class GeneralManager : MonoBehaviour
 		instance = this;
 		settings = GeneralSettings.Get();
 
+		foreach (Panel panel in FindObjectsByType<Panel>(FindObjectsSortMode.None))
+			panel.gameObject.SetActive(false);
+
 		projectsPanel.CheckPaths();
 
 		if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -31,8 +34,8 @@ public class GeneralManager : MonoBehaviour
 
 	public static void PopError(string message, Action onClick = null) => instance.errorPanel.Pop(message, onClick);
 
-	public static void PopProgress(string title, Func<float> getProgress, Action onDone)
+	public static void PopProgress(string title, Func<bool> checkDone, Action onDone)
 	{
-		instance.progressPanel.Pop(title, getProgress, onDone);
+		instance.progressPanel.Pop(title, checkDone, onDone);
 	}
 }

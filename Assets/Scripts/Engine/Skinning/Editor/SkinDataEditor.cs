@@ -72,9 +72,7 @@ public class SkinDataEditor : Editor
 	{
 		Skinning.Init(data);
 
-		foreach (SkinGraphic graphic in Resources.FindObjectsOfTypeAll<SkinGraphic>())
-		{
+		foreach (SkinElement graphic in Resources.FindObjectsOfTypeAll<SkinElement>())
 			graphic.Skin();
-		}
 	}
 }

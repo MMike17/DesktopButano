@@ -6,7 +6,6 @@ public class Panel : MonoBehaviour
 	private static Panel current;
 
 	[Header(nameof(Panel) + " Settings")]
-	public Vector2Int size;
 	public bool overrides;
 	public bool fullScreen;
 
@@ -26,7 +25,18 @@ public class Panel : MonoBehaviour
 				Screen.SetResolution(res.width, res.height, true);
 			}
 			else
-				Screen.SetResolution(size.x, size.y, false);
+			{
+				RectTransform rectTransform = GetComponent<RectTransform>();
+				Screen.SetResolution(
+					Mathf.FloorToInt(rectTransform.rect.width),
+					Mathf.FloorToInt(rectTransform.rect.width),
+					false
+				);
+
+				rectTransform.anchorMin = Vector2.zero;
+				rectTransform.anchorMax = Vector2.one;
+				rectTransform.sizeDelta = Vector2.zero;
+			}
 
 			current = this;
 		}

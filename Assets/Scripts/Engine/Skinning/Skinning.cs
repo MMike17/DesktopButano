@@ -32,7 +32,7 @@ public static class Skinning
 
 	public static Color GetSkin(SkinTag tag)
 	{
-		if  (!IsReady())
+		if (!IsReady())
 		{
 			Debug.LogError("<b>[Skinning]</b> : skinning is not ready (skin data has not been assigned)");
 			return Color.black;
@@ -48,7 +48,7 @@ public static class Skinning
 
 	public static void Register(SkinElement graphic)
 	{
-		if  (components == null)
+		if (components == null)
 			components = new List<SkinElement>();
 
 		components.Add(graphic);
@@ -56,7 +56,7 @@ public static class Skinning
 
 	public static void Resign(SkinElement graphic)
 	{
-		if  (components == null)
+		if (components == null)
 		{
 			components = new List<SkinElement>();
 			return;

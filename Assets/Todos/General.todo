@@ -1,4 +1,3 @@
-- Setup color scheme
 x Download Butano
 x Update Butano
 x List projects
@@ -9,12 +8,15 @@ x Add settings panel
 - Explore files : images
 - Explore files : code
 - Explore files : sound
-- Import assets
+- Explore files : other
+- Import asset(s)
 - Build game
 - Open file with linked app
 - Settings for external apps
 - Settings for cores
-- Duplicate asset
-- Delete asset
-- Move asset
+- Duplicate asset ?
+- Delete asset (+ hotkeys)
+- Move asset ?
 - Settings for project
+- Add folder for data when creating project
+- Manage invalid assets

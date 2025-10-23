@@ -15,7 +15,7 @@ public class SkinSelectable : SkinElement
 	{
 		get
 		{
-			if(internalSelectable == null)
+			if (internalSelectable == null)
 				internalSelectable = GetComponent<Selectable>();
 
 			return internalSelectable;
@@ -29,10 +29,11 @@ public class SkinSelectable : SkinElement
 		ColorBlock selectableColors = new ColorBlock()
 		{
 			normalColor = Skinning.GetSkin(skinTag),
-				highlightedColor = Skinning.GetSkin(highlightedColorTag),
-				pressedColor = Skinning.GetSkin(pressedColorTag),
-				fadeDuration = 0.1f,
-				colorMultiplier = 1
+			highlightedColor = Skinning.GetSkin(highlightedColorTag),
+			pressedColor = Skinning.GetSkin(pressedColorTag),
+			selectedColor = Skinning.GetSkin(highlightedColorTag),
+			fadeDuration = 0.1f,
+			colorMultiplier = 1
 		};
 
 		selectable.colors = selectableColors;

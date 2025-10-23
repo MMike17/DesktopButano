@@ -118,6 +118,8 @@ public class ProjectManager : MonoBehaviour
 		settingsButton.onClick.AddListener(() =>
 		{
 			// TODO : Set fields to saved settings
+			projectPathText.text = PlayerPrefs.GetString(settings.projectRootKey);
+			butanoPathText.text = PlayerPrefs.GetString(settings.projectButanoKey);
 			settingsPanel.Pop();
 		});
 
@@ -349,8 +351,6 @@ public class ProjectManager : MonoBehaviour
 		});
 
 		selectorPanel.Pop();
-		projectPathText.text = PlayerPrefs.GetString(settings.projectRootKey);
-		butanoPathText.text = PlayerPrefs.GetString(settings.projectButanoKey);
 
 		foreach (Transform ticket in projectList)
 			ticket.gameObject.SetActive(false);

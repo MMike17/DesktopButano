@@ -40,4 +40,7 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public SkinTag projectVersionNoTag;
 	[Space]
 	public ProjectTicket projectTicketPrefab;
+
+	[Header(nameof(ProjectExplorer))]
+	public FileTicket explorerFilePrefab;
 }

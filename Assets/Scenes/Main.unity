@@ -6199,7 +6199,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.000061035156}
-  m_SizeDelta: {x: 0, y: -540}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1370316828
 MonoBehaviour:
@@ -8453,12 +8453,12 @@ GameObject:
   - component: {fileID: 1958525401}
   - component: {fileID: 1958525402}
   m_Layer: 5
-  m_Name: ProjectsExplorer
+  m_Name: ProjectViewer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1958525401
 RectTransform:
   m_ObjectHideFlags: 0

@@ -17,17 +17,15 @@ public class ProjectExplorer : Panel
 	public Transform explorerList;
 	[Space]
 	public TMP_Text detailsNameText;
-	public GameObject detailsWarningMessage;
-
-	// TODO : What are the details ?
-	// name
-	// preview
-	// extension
-	// size
-	// warning panel
-
-	// 	image
-	// dimensions
+	public TMP_Text detailsExtensionText;
+	public TMP_Text detailsSizeText;
+	public GameObject detailsWarning;
+	public TMP_Text detailsWarningText;
+	[Space]
+	public GameObject imageDetails;
+	public GameObject imagePreview;
+	public TMP_Text imageDetailsDimentions;
+	public RawImage imagePreviewTexture;
 
 	private enum FileType
 	{
@@ -66,13 +64,14 @@ public class ProjectExplorer : Panel
 
 		// TODO : Asset type selectors
 		// TODO : Project settings
-		// TODO : Preview
+		// TODO : Preview Image
+		// TODO : Preview Sound
+		// TODO : Preview code
 		// TODO : Open asset with external program
 		// TODO : Rename project
 		// TODO : Delete project
 		// TODO : Build
 		// TODO : Check settings before build
-		// TODO : Select how many cores to build
 		// TODO : Set ROM code and name
 		// TODO : Set ROM names from project name by default
 
@@ -81,8 +80,6 @@ public class ProjectExplorer : Panel
 
 	private void RefreshExplorer()
 	{
-		// TODO : Display files depending on selected type
-
 		string dir = selectedType switch
 		{
 			FileType.image => "graphics"
@@ -101,7 +98,24 @@ public class ProjectExplorer : Panel
 			ticket.Init(file, () =>
 			{
 				detailsNameText.text = file.Name;
-				detailsWarningMessage.SetActive(file.Extension != ".bmp");
+				detailsExtensionText.text = file.Extension;
+				detailsSizeText.text = file.Length + "o";
+				detailsWarning.SetActive(file.Extension != ".bmp");
+
+				imageDetails.SetActive(selectedType == FileType.image);
+
+				switch (selectedType)
+				{
+					case FileType.image:
+						Texture2D texture = new Texture2D(2, 2);
+						imagePreviewTexture.enabled = texture.LoadImage(File.ReadAllBytes(file.FullName));
+
+						if (imagePreviewTexture.enabled)
+							imagePreviewTexture.texture = texture;
+
+						imageDetailsDimentions.text = texture.width + "x" + texture.height;
+						break;
+				}
 			});
 		}
 	}

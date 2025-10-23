@@ -43,4 +43,6 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 
 	[Header(nameof(ProjectExplorer))]
 	public FileTicket explorerFilePrefab;
+	[TextArea]
+	public string detailsImageWarning;
 }

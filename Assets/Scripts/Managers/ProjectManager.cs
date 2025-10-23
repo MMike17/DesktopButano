@@ -208,7 +208,7 @@ public class ProjectManager : MonoBehaviour
 
 		GetButanoLatestVersion(version =>
 		{
-			string finalPath = Path.Combine(PlayerPrefs.GetString(settings.projectButanoKey), "butano-" + version);
+			string finalPath = PlayerPrefs.GetString(settings.projectButanoKey);
 
 			UnityWebRequest request = UnityWebRequest.Get(settings.projectButanoURLDownload + version + ".zip");
 			request.downloadHandler = new DownloadHandlerFile(tempPath);
@@ -229,7 +229,7 @@ public class ProjectManager : MonoBehaviour
 				else
 				{
 					ZipFile.ExtractToDirectory(tempPath, finalPath);
-					PlayerPrefs.SetString(settings.projectButanoKey, finalPath);
+					PlayerPrefs.SetString(settings.projectButanoKey, Path.Combine(finalPath, "butano-" + version));
 				}
 			};
 		});

@@ -153,12 +153,12 @@ public class ProjectManager : MonoBehaviour
 
 		string path = PlayerPrefs.GetString(settings.projectButanoKey);
 
-		if (!Directory.Exists(path))
+		if (!Directory.Exists(path) || !new DirectoryInfo(path).Name.Contains("butano-"))
 			return false;
 
 		foreach (DirectoryInfo dir in new DirectoryInfo(path).GetDirectories())
 		{
-			if (dir.Name.Contains("butano"))
+			if (dir.Name == "butano")
 				return true;
 		}
 
@@ -182,21 +182,9 @@ public class ProjectManager : MonoBehaviour
 			return;
 		}
 
-		string detectedInstall = butanoPathInput.text;
-		bool detected = false;
-
-		foreach (DirectoryInfo dir in new DirectoryInfo(butanoPathInput.text).GetDirectories())
-		{
-			if (dir.Name.Contains("butano-"))
-			{
-				detectedInstall = dir.FullName;
-				detected = true;
-			}
-		}
-
-		PlayerPrefs.SetString(settings.projectButanoKey, detectedInstall);
-
-		if (!detected)
+		if (new DirectoryInfo(butanoPathInput.text).Name.Contains("butano-"))
+			PlayerPrefs.SetString(settings.projectButanoKey, butanoPathInput.text);
+		else
 			DownloadButano();
 
 		CheckPaths();

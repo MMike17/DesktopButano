@@ -24,6 +24,8 @@ public class ProjectManager : MonoBehaviour
 	public Panel selectorPanel;
 	public TMP_Text versionText;
 	public SkinGraphic versionSkin;
+	public Button projectPathButton;
+	public TMP_Text projectPathText;
 
 	private GeneralSettings _settings;
 	private GeneralSettings settings
@@ -46,7 +48,7 @@ public class ProjectManager : MonoBehaviour
 				null,
 				FileBrowser.PickMode.Folders,
 				false,
-				title: "Select path to Butano projects folder"
+				title: settings.projectRootMessage
 			);
 		});
 		rootConfirmButton.onClick.AddListener(() => SaveRoot());
@@ -58,10 +60,16 @@ public class ProjectManager : MonoBehaviour
 				null,
 				FileBrowser.PickMode.Folders,
 				false,
-				title: "Select path to/for Butano installation"
+				title: settings.projectButanoMessage
 			);
 		});
 		butanoConfirmButton.onClick.AddListener(() => SaveButano());
+
+		projectPathButton.onClick.AddListener(() =>
+		{
+			rootPathInput.text = PlayerPrefs.GetString(settings.projectRootKey);
+			AskForRoot();
+		});
 	}
 
 	private void AskForRoot()
@@ -184,8 +192,6 @@ public class ProjectManager : MonoBehaviour
 			return;
 		}
 
-		selectorPanel.Pop();
-
 		GetButanoLatestVersion(latest =>
 		{
 			versionText.text = latest;
@@ -210,5 +216,8 @@ public class ProjectManager : MonoBehaviour
 				});
 			}
 		});
+
+		selectorPanel.Pop();
+		projectPathText.text = PlayerPrefs.GetString(settings.projectRootKey);
 	}
 }

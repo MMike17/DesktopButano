@@ -24,7 +24,9 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 
 	[Header(nameof(ProjectManager))]
 	public string projectRootKey;
+	public string projectRootMessage;
 	public string projectButanoKey;
+	public string projectButanoMessage;
 	[Space]
 	[TextArea]
 	public string projectButanoURLVersion;

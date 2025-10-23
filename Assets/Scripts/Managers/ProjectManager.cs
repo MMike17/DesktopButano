@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
@@ -308,7 +307,7 @@ public class ProjectManager : MonoBehaviour
 
 				selected.Init(
 					dir,
-					null, // TODO : Add method to open project
+					GeneralManager.OpenProject,
 					() => GeneralManager.PopChoice(
 						"Are you sure you want to delete the " + dir.Name + " project ?",
 						null,

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using UnityEngine;
 
 /// <summary>Manages the general flow of windows</summary>
@@ -6,10 +7,9 @@ public class GeneralManager : MonoBehaviour
 {
 	private static GeneralManager instance;
 
-	// TODO : Setup window selector
-
 	[Header("References")]
 	public ProjectManager projectsPanel;
+	public ProjectExplorer projectExplorer;
 	[Space]
 	public ErrorPanel errorPanel;
 	public ProgressPanel progressPanel;
@@ -42,4 +42,6 @@ public class GeneralManager : MonoBehaviour
 	}
 
 	public static void PopChoice(string message, Action onNo, Action onYes) => instance.choicePanel.Pop(message, onNo, onYes);
+
+	public static void OpenProject(DirectoryInfo project) => instance.projectExplorer.Pop(project);
 }

@@ -23,6 +23,14 @@ public class ProjectExplorer : Panel
 		// TODO : Asset type selectors
 		// TODO : Project settings
 		// TODO : Preview
+		// TODO : Open asset with external program
+		// TODO : Rename project
+		// TODO : Delete project
+		// TODO : Build
+		// TODO : Check settings before build
+		// TODO : Select how many cores to build
+		// TODO : Set ROM code and name
+		// TODO : Set ROM names from project name by default
 
 		base.Pop();
 	}

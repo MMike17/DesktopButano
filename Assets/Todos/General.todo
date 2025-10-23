@@ -5,12 +5,16 @@ x List projects
 x Delete project
 x Open project
 x Create new project
+x Add settings panel
 - Explore files : images
 - Explore files : code
 - Explore files : sound
 - Import assets
 - Build game
 - Open file with linked app
+- Settings for external apps
+- Settings for cores
 - Duplicate asset
 - Delete asset
 - Move asset
+- Settings for project

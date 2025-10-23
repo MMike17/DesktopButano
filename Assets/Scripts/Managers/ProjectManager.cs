@@ -24,6 +24,7 @@ public class ProjectManager : MonoBehaviour
 	public Button butanoConfirmButton;
 	[Space]
 	public Panel selectorPanel;
+	public Button settingsButton;
 	public TMP_Text versionText;
 	public SkinGraphic versionSkin;
 	public Button projectPathButton;
@@ -36,6 +37,11 @@ public class ProjectManager : MonoBehaviour
 	public Panel createProjectPanel;
 	public TMP_InputField createNameInput;
 	public Button createButton;
+	[Space]
+	public Panel settingsPanel;
+	public Button settingsCloseButton;
+
+	// TODO : Move paths to settings
 
 	[DllImport("shell32.dll", CharSet = CharSet.Auto)]
 	private static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOP);
@@ -111,6 +117,12 @@ public class ProjectManager : MonoBehaviour
 		});
 		butanoConfirmButton.onClick.AddListener(() => SaveButano());
 
+		settingsButton.onClick.AddListener(() =>
+		{
+			// TODO : Set fields to saved settings
+			settingsPanel.Pop();
+		});
+
 		projectPathButton.onClick.AddListener(() => AskForRoot());
 		butanoPathButton.onClick.AddListener(() => AskForButano());
 
@@ -123,6 +135,12 @@ public class ProjectManager : MonoBehaviour
 
 		createNameInput.onValueChanged.AddListener(value => createButton.interactable = !string.IsNullOrWhiteSpace(value));
 		createButton.onClick.AddListener(() => CreateProject(createNameInput.text));
+
+		settingsCloseButton.onClick.AddListener(() =>
+		{
+			// TODO : Save settings here
+			selectorPanel.Pop();
+		});
 	}
 
 	private void AskForRoot()

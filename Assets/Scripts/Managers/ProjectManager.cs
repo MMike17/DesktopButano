@@ -27,10 +27,6 @@ public class ProjectManager : MonoBehaviour
 	public Button settingsButton;
 	public TMP_Text versionText;
 	public SkinGraphic versionSkin;
-	public Button projectPathButton;
-	public TMP_Text projectPathText;
-	public Button butanoPathButton;
-	public TMP_Text butanoPathText;
 	public Transform projectList;
 	public Button createProjectButton;
 	[Space]
@@ -39,9 +35,11 @@ public class ProjectManager : MonoBehaviour
 	public Button createButton;
 	[Space]
 	public Panel settingsPanel;
+	public Button projectPathButton;
+	public TMP_Text projectPathText;
+	public Button butanoPathButton;
+	public TMP_Text butanoPathText;
 	public Button settingsCloseButton;
-
-	// TODO : Move paths to settings
 
 	[DllImport("shell32.dll", CharSet = CharSet.Auto)]
 	private static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOP);

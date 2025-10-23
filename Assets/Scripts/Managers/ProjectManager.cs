@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using SimpleFileBrowser;
@@ -26,6 +27,7 @@ public class ProjectManager : MonoBehaviour
 	public SkinGraphic versionSkin;
 	public Button projectPathButton;
 	public TMP_Text projectPathText;
+	public Transform projectList;
 
 	private GeneralSettings _settings;
 	private GeneralSettings settings
@@ -178,6 +180,12 @@ public class ProjectManager : MonoBehaviour
 		request.SendWebRequest().completed += op => OnDone?.Invoke(request.url.Split('/')[^1]);
 	}
 
+	private bool IsDirButanoProject(DirectoryInfo dir)
+	{
+		return new List<FileInfo>(dir.GetFiles()).Find(item => item.Name == "Makefile") != null &&
+			dir.GetDirectories("src").Length > 0;
+	}
+
 	public void CheckPaths()
 	{
 		if (!PlayerPrefs.HasKey(settings.projectRootKey) || !Directory.Exists(PlayerPrefs.GetString(settings.projectRootKey)))
@@ -219,5 +227,44 @@ public class ProjectManager : MonoBehaviour
 
 		selectorPanel.Pop();
 		projectPathText.text = PlayerPrefs.GetString(settings.projectRootKey);
+
+		foreach (Transform ticket in projectList)
+			ticket.gameObject.SetActive(false);
+
+		foreach (DirectoryInfo dir in new DirectoryInfo(projectPathText.text).GetDirectories())
+		{
+			if (IsDirButanoProject(dir))
+			{
+				ProjectTicket selected = null;
+
+				foreach (Transform ticket in projectList)
+				{
+					if (!ticket.gameObject.activeSelf)
+					{
+						selected = ticket.GetComponent<ProjectTicket>();
+						break;
+					}
+				}
+
+				if (selected == null)
+					selected = Instantiate(settings.projectTicketPrefab, projectList);
+
+				selected.Init(
+					dir,
+					null, // TODO : Add method to open project
+					() => GeneralManager.PopChoice(
+						"Are you sure you want to delete the " + dir.Name + " project ?",
+						null,
+						() =>
+						{
+							Type shellType = Type.GetTypeFromProgID("Shell.Application", true);
+							dynamic shellApp = Activator.CreateInstance(shellType);
+							var recycleBin = shellApp.Namespace(0xa);
+							recycleBin.MoveHere(dir.FullName);
+						}
+					)
+				);
+			}
+		}
 	}
 }

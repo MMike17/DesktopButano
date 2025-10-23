@@ -17,7 +17,9 @@ MonoBehaviour:
   popupProgressSpeedSlow: 0.2
   popupProgressCheck: 0.7
   projectRootKey: Root_path
+  projectRootMessage: Select path to Butano projects folder
   projectButanoKey: Butano_path
+  projectButanoMessage: Select path to/for Butano installation
   projectButanoURLVersion: https://github.com/GValiente/butano/releases/latest
   projectButanoURLDownload: https://github.com/GValiente/butano/archive/refs/tags/
   projectVersionFormat: 'Local Butano version is {0} but the latest is {1}.
@@ -26,3 +28,4 @@ MonoBehaviour:
     you want to update the Butano version ?'
   projectVersionOkTag: 6
   projectVersionNoTag: 7
+  projectTicketPrefab: {fileID: 784899459084144648, guid: 4ffaf66e70fe2a24c9f5b226862387f1, type: 3}

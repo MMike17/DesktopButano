@@ -38,4 +38,6 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	[Space]
 	public SkinTag projectVersionOkTag;
 	public SkinTag projectVersionNoTag;
+	[Space]
+	public ProjectTicket projectTicketPrefab;
 }

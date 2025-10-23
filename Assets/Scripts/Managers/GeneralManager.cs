@@ -43,5 +43,8 @@ public class GeneralManager : MonoBehaviour
 
 	public static void PopChoice(string message, Action onNo, Action onYes) => instance.choicePanel.Pop(message, onNo, onYes);
 
-	public static void OpenProject(DirectoryInfo project) => instance.projectExplorer.Pop(project);
+	public static void OpenProject(DirectoryInfo project)
+	{
+		instance.projectExplorer.Pop(project, () => instance.projectsPanel.CheckPaths());
+	}
 }

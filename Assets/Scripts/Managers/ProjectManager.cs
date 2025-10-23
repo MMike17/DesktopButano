@@ -29,6 +29,11 @@ public class ProjectManager : MonoBehaviour
 	public Button projectPathButton;
 	public TMP_Text projectPathText;
 	public Transform projectList;
+	public Button createProjectButton;
+	[Space]
+	public Panel createProjectPanel;
+	public TMP_InputField createNameInput;
+	public Button createButton;
 
 	[DllImport("shell32.dll", CharSet = CharSet.Auto)]
 	private static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOP);
@@ -54,7 +59,8 @@ public class ProjectManager : MonoBehaviour
 	{
 		FOF_ALLOWUNDO = 0x0040, // move to recycle
 		FOF_NOCONFIRMATION = 0x0010, // no confirmation dialogue
-		FOF_SILENT = 0x0004 // no progression dialogue
+		FOF_SILENT = 0x0004, // no progression dialogue
+		FOF_NOERRORUI = 0x0400 // no error UI
 	}
 
 	private enum FileOperationType : uint
@@ -108,6 +114,16 @@ public class ProjectManager : MonoBehaviour
 			rootPathInput.text = PlayerPrefs.GetString(settings.projectRootKey);
 			AskForRoot();
 		});
+
+		createProjectButton.onClick.AddListener(() =>
+		{
+			createNameInput.text = "";
+			createProjectPanel.Pop();
+			CheckPaths();
+		});
+
+		createNameInput.onValueChanged.AddListener(value => createButton.interactable = !string.IsNullOrWhiteSpace(value));
+		createButton.onClick.AddListener(() => CreateProject(createNameInput.text));
 	}
 
 	private void AskForRoot()
@@ -240,6 +256,37 @@ public class ProjectManager : MonoBehaviour
 
 		if (result != 0)
 			GeneralManager.PopError("Couldn't delete project " + dir.Name + "\nError : " + result);
+	}
+
+	private void CreateProject(string name)
+	{
+		createProjectPanel.gameObject.SetActive(false);
+		string targetPath = Path.Combine(PlayerPrefs.GetString(settings.projectRootKey), name);
+
+		SHFILEOPSTRUCT shf = new SHFILEOPSTRUCT
+		{
+			wFunc = FileOperationType.FO_COPY,
+			pFrom = Path.Combine(PlayerPrefs.GetString(settings.projectButanoKey), "template") + '\0' + '\0',
+			pTo = targetPath + '\0' + '\0',
+			fFlags = FileOperationFlags.FOF_NOCONFIRMATION | FileOperationFlags.FOF_SILENT | FileOperationFlags.FOF_NOERRORUI,
+			hwnd = IntPtr.Zero,
+			fAnyOperationsAborted = false,
+			hNameMappings = IntPtr.Zero,
+			lpszProgressTitle = null,
+		};
+
+		int result = SHFileOperation(ref shf);
+
+		if (result == 0)
+		{
+			List<FileInfo> files = new List<FileInfo>(new DirectoryInfo(targetPath).GetFiles());
+			FileInfo makefile = files.Find(file => file.Name == "Makefile");
+			File.WriteAllText(makefile.FullName, File.ReadAllText(makefile.FullName).Replace("ROM TITLE", name));
+
+			CheckPaths();
+		}
+		else
+			GeneralManager.PopError("Couldn't create project " + name + "\nError : " + result);
 	}
 
 	public void CheckPaths()

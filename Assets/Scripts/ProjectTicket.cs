@@ -25,5 +25,7 @@ public class ProjectTicket : MonoBehaviour
 			null,
 			() => OnDelete?.Invoke()
 		));
+
+		gameObject.SetActive(true);
 	}
 }

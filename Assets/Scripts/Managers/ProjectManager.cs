@@ -28,6 +28,8 @@ public class ProjectManager : MonoBehaviour
 	public SkinGraphic versionSkin;
 	public Button projectPathButton;
 	public TMP_Text projectPathText;
+	public Button butanoPathButton;
+	public TMP_Text butanoPathText;
 	public Transform projectList;
 	public Button createProjectButton;
 	[Space]
@@ -109,11 +111,8 @@ public class ProjectManager : MonoBehaviour
 		});
 		butanoConfirmButton.onClick.AddListener(() => SaveButano());
 
-		projectPathButton.onClick.AddListener(() =>
-		{
-			rootPathInput.text = PlayerPrefs.GetString(settings.projectRootKey);
-			AskForRoot();
-		});
+		projectPathButton.onClick.AddListener(() => AskForRoot());
+		butanoPathButton.onClick.AddListener(() => AskForButano());
 
 		createProjectButton.onClick.AddListener(() =>
 		{
@@ -166,6 +165,14 @@ public class ProjectManager : MonoBehaviour
 		return false;
 	}
 
+	private void AskForButano()
+	{
+		if (PlayerPrefs.HasKey(settings.projectButanoKey))
+			butanoPathInput.text = PlayerPrefs.GetString(settings.projectButanoKey);
+
+		butanoPathPanel.Pop();
+	}
+
 	private void SaveButano()
 	{
 		if (!Directory.Exists(butanoPathInput.text))
@@ -175,16 +182,21 @@ public class ProjectManager : MonoBehaviour
 			return;
 		}
 
-		PlayerPrefs.SetString(settings.projectButanoKey, butanoPathInput.text);
-		bool hasInstall = false;
+		string detectedInstall = butanoPathInput.text;
+		bool detected = false;
 
 		foreach (DirectoryInfo dir in new DirectoryInfo(butanoPathInput.text).GetDirectories())
 		{
-			if (dir.Name.Contains("butano"))
-				hasInstall = true;
+			if (dir.Name.Contains("butano-"))
+			{
+				detectedInstall = dir.FullName;
+				detected = true;
+			}
 		}
 
-		if (!hasInstall)
+		PlayerPrefs.SetString(settings.projectButanoKey, detectedInstall);
+
+		if (!detected)
 			DownloadButano();
 
 		CheckPaths();
@@ -196,6 +208,8 @@ public class ProjectManager : MonoBehaviour
 
 		GetButanoLatestVersion(version =>
 		{
+			string finalPath = Path.Combine(PlayerPrefs.GetString(settings.projectButanoKey), "butano-" + version);
+
 			UnityWebRequest request = UnityWebRequest.Get(settings.projectButanoURLDownload + version + ".zip");
 			request.downloadHandler = new DownloadHandlerFile(tempPath);
 			GeneralManager.PopProgress(
@@ -214,11 +228,12 @@ public class ProjectManager : MonoBehaviour
 				}
 				else
 				{
-					ZipFile.ExtractToDirectory(tempPath, PlayerPrefs.GetString(settings.projectButanoKey));
-					CheckPaths();
+					ZipFile.ExtractToDirectory(tempPath, finalPath);
+					PlayerPrefs.SetString(settings.projectButanoKey, finalPath);
 				}
 			};
 		});
+
 	}
 
 	private string GetButanoLocalVersion()
@@ -299,7 +314,7 @@ public class ProjectManager : MonoBehaviour
 
 		if (!CheckHasButanoPath())
 		{
-			butanoPathPanel.Pop();
+			AskForButano();
 			return;
 		}
 
@@ -324,12 +339,14 @@ public class ProjectManager : MonoBehaviour
 					}
 
 					DownloadButano();
+					CheckPaths();
 				});
 			}
 		});
 
 		selectorPanel.Pop();
 		projectPathText.text = PlayerPrefs.GetString(settings.projectRootKey);
+		butanoPathText.text = PlayerPrefs.GetString(settings.projectButanoKey);
 
 		foreach (Transform ticket in projectList)
 			ticket.gameObject.SetActive(false);

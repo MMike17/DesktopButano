@@ -15,7 +15,11 @@ public class ProjectTicket : MonoBehaviour
 	public void Init(DirectoryInfo dir, Action<DirectoryInfo> OnOpen, Action OnDelete)
 	{
 		nameText.text = dir.Name;
+
+		openButton.onClick.RemoveAllListeners();
 		openButton.onClick.AddListener(() => OnOpen?.Invoke(dir));
+
+		deleteButton.onClick.RemoveAllListeners();
 		deleteButton.onClick.AddListener(() => GeneralManager.PopChoice(
 			"Are you sure you want to delete the " + dir.Name + " project ?",
 			null,

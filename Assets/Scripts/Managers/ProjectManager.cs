@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using SimpleFileBrowser;
 using TMPro;
 using UnityEngine;
@@ -28,6 +30,41 @@ public class ProjectManager : MonoBehaviour
 	public Button projectPathButton;
 	public TMP_Text projectPathText;
 	public Transform projectList;
+
+	[DllImport("shell32.dll", CharSet = CharSet.Auto)]
+	private static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOP);
+
+	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+	private struct SHFILEOPSTRUCT
+	{
+		public IntPtr hwnd;
+		public FileOperationType wFunc;
+		[MarshalAs(UnmanagedType.LPTStr)]
+		public string pFrom;
+		[MarshalAs(UnmanagedType.LPTStr)]
+		public string pTo;
+		public FileOperationFlags fFlags;
+		public bool fAnyOperationsAborted;
+		public IntPtr hNameMappings;
+		[MarshalAs(UnmanagedType.LPTStr)]
+		public string lpszProgressTitle;
+	}
+
+	[Flags]
+	private enum FileOperationFlags : ushort
+	{
+		FOF_ALLOWUNDO = 0x0040, // move to recycle
+		FOF_NOCONFIRMATION = 0x0010, // no confirmation dialogue
+		FOF_SILENT = 0x0004 // no progression dialogue
+	}
+
+	private enum FileOperationType : uint
+	{
+		FO_MOVE = 0x0001,
+		FO_COPY = 0x0002,
+		FO_DELETE = 0x0003,
+		FO_RENAME = 0x0004,
+	}
 
 	private GeneralSettings _settings;
 	private GeneralSettings settings
@@ -186,6 +223,26 @@ public class ProjectManager : MonoBehaviour
 			dir.GetDirectories("src").Length > 0;
 	}
 
+	private void DeleteProject(DirectoryInfo dir)
+	{
+		SHFILEOPSTRUCT shf = new SHFILEOPSTRUCT
+		{
+			wFunc = FileOperationType.FO_DELETE,
+			pFrom = dir.FullName + '\0' + '\0', // double null is required
+			fFlags = FileOperationFlags.FOF_ALLOWUNDO | FileOperationFlags.FOF_NOCONFIRMATION | FileOperationFlags.FOF_SILENT,
+			hwnd = IntPtr.Zero,
+			pTo = null,
+			fAnyOperationsAborted = false,
+			hNameMappings = IntPtr.Zero,
+			lpszProgressTitle = null
+		};
+
+		int result = SHFileOperation(ref shf);
+
+		if (result != 0)
+			GeneralManager.PopError("Couldn't delete project " + dir.Name + "\nError : " + result);
+	}
+
 	public void CheckPaths()
 	{
 		if (!PlayerPrefs.HasKey(settings.projectRootKey) || !Directory.Exists(PlayerPrefs.GetString(settings.projectRootKey)))
@@ -257,10 +314,8 @@ public class ProjectManager : MonoBehaviour
 						null,
 						() =>
 						{
-							Type shellType = Type.GetTypeFromProgID("Shell.Application", true);
-							dynamic shellApp = Activator.CreateInstance(shellType);
-							var recycleBin = shellApp.Namespace(0xa);
-							recycleBin.MoveHere(dir.FullName);
+							DeleteProject(dir);
+							CheckPaths();
 						}
 					)
 				);

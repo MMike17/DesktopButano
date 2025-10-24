@@ -31,6 +31,8 @@ public class ProjectExplorer : Panel
 	[Space]
 	public Panel settingsPanel;
 	public Button settingsSaveButton;
+	public TMP_InputField settingsRomNameInput;
+	public TMP_InputField settingsRomCodeInput;
 	// SETT : Add settings ui
 
 	private enum FileType
@@ -94,11 +96,11 @@ public class ProjectExplorer : Panel
 		// TODO : Preview code
 		// TODO : Open asset with external program
 		// TODO : Rename project
-		// TODO : Delete project
 		// TODO : Build
 		// TODO : Check settings before build
 		// TODO : Set ROM code and name
 		// TODO : Set ROM names from project name by default
+		// TODO : Open category folder
 
 		base.Pop();
 	}

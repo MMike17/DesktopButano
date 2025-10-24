@@ -11,6 +11,7 @@ public class ProjectExplorer : Panel
 	[Header("References")]
 	public TMP_Text projectTitle;
 	public Button returnButton;
+	public Button settingsButton;
 	[Space]
 	public Toggle imageToggle;
 	[Space]
@@ -26,6 +27,10 @@ public class ProjectExplorer : Panel
 	public GameObject imagePreview;
 	public TMP_Text imageDetailsDimentions;
 	public RawImage imagePreviewTexture;
+	[Space]
+	public Panel settingsPanel;
+	public Button settingsSaveButton;
+	// SETT : Add settings ui
 
 	private enum FileType
 	{
@@ -50,6 +55,20 @@ public class ProjectExplorer : Panel
 
 		returnButton.onClick.RemoveAllListeners();
 		returnButton.onClick.AddListener(() => OnReturn());
+
+		settingsButton.onClick.RemoveAllListeners();
+		settingsButton.onClick.AddListener(() =>
+		{
+			// SETT : Set fields to saved settings
+			settingsPanel.Pop();
+		});
+
+		settingsSaveButton.onClick.RemoveAllListeners();
+		settingsSaveButton.onClick.AddListener(() =>
+		{
+			// SETT : Save settings
+			settingsPanel.gameObject.SetActive(false);
+		});
 
 		imageToggle.onValueChanged.AddListener(value =>
 		{

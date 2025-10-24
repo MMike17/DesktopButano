@@ -12,6 +12,7 @@ public class ProjectExplorer : Panel
 	public TMP_Text projectTitle;
 	public Button returnButton;
 	public Button settingsButton;
+	public Button playButton;
 	[Space]
 	public Toggle imageToggle;
 	[Space]
@@ -61,6 +62,12 @@ public class ProjectExplorer : Panel
 		{
 			// SETT : Set fields to saved settings
 			settingsPanel.Pop();
+		});
+
+		playButton.onClick.RemoveAllListeners();
+		playButton.onClick.AddListener(() =>
+		{
+			// TODO : Add game build and start
 		});
 
 		settingsSaveButton.onClick.RemoveAllListeners();

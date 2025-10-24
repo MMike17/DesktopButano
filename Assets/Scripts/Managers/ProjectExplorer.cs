@@ -60,8 +60,6 @@ public class ProjectExplorer : Panel
 			}
 		});
 
-		// TODO : What do we need here ?
-
 		// TODO : Asset type selectors
 		// TODO : Project settings
 		// TODO : Preview Image

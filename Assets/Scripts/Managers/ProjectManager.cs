@@ -40,6 +40,7 @@ public class ProjectManager : MonoBehaviour
 	public Button butanoPathButton;
 	public TMP_Text butanoPathText;
 	public Button settingsCloseButton;
+	// SETT : Add ui for settings
 
 	[DllImport("shell32.dll", CharSet = CharSet.Auto)]
 	private static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOP);
@@ -117,7 +118,7 @@ public class ProjectManager : MonoBehaviour
 
 		settingsButton.onClick.AddListener(() =>
 		{
-			// TODO : Set fields to saved settings
+			// SETT : Set fields to saved settings
 			projectPathText.text = PlayerPrefs.GetString(settings.projectRootKey);
 			butanoPathText.text = PlayerPrefs.GetString(settings.projectButanoKey);
 			settingsPanel.Pop();
@@ -138,7 +139,7 @@ public class ProjectManager : MonoBehaviour
 
 		settingsCloseButton.onClick.AddListener(() =>
 		{
-			// TODO : Save settings here
+			// SETT : Save settings
 			selectorPanel.Pop();
 		});
 	}

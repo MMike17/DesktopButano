@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using B83.Image.BMP;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,6 +44,7 @@ public class ProjectExplorer : Panel
 	private FileType selectedType;
 	private DirectoryInfo project;
 	private GeneralSettings settings;
+	private BMPLoader bmpLoader;
 	private List<FileTicket> tickets;
 	private List<string> makefileLines;
 
@@ -50,6 +52,7 @@ public class ProjectExplorer : Panel
 	{
 		tickets = new List<FileTicket>();
 		settings = GeneralSettings.Get();
+		bmpLoader = new BMPLoader();
 	}
 
 	public void Pop(DirectoryInfo project, Action OnReturn)
@@ -120,6 +123,7 @@ public class ProjectExplorer : Panel
 		// TODO : Open category folder
 
 		base.Pop();
+		RefreshExplorer();
 	}
 
 	private void RefreshExplorer()
@@ -131,6 +135,9 @@ public class ProjectExplorer : Panel
 
 		foreach (FileInfo file in new DirectoryInfo(Path.Combine(project.FullName, dir)).GetFiles())
 		{
+			if (file.Name == ".gitignore")
+				continue;
+
 			FileTicket ticket = tickets.Find(item => !item.gameObject.activeSelf);
 
 			if (ticket == null)
@@ -151,8 +158,18 @@ public class ProjectExplorer : Panel
 				switch (selectedType)
 				{
 					case FileType.image:
-						Texture2D texture = new Texture2D(2, 2);
-						imagePreviewTexture.enabled = texture.LoadImage(File.ReadAllBytes(file.FullName));
+						Texture2D texture = null;
+
+						try
+						{
+							texture = bmpLoader.LoadBMP(File.ReadAllBytes(file.FullName)).ToTexture2D();
+						}
+						catch (Exception ex)
+						{
+							Debug.Log(ex);
+						}
+
+						imagePreviewTexture.enabled = texture != null;
 
 						if (imagePreviewTexture.enabled)
 							imagePreviewTexture.texture = texture;
@@ -162,6 +179,8 @@ public class ProjectExplorer : Panel
 				}
 			});
 		}
+
+		tickets.Find(item => item.gameObject.activeSelf).GetComponent<FileTicket>().selectButton.onClick.Invoke();
 	}
 
 	private int GetMakefileLineIndex(string[] tags)

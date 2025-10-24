@@ -7,4 +7,5 @@
   <Project Path="Unity.PlayerPrefsEditor.Editor.csproj" />
   <Project Path="Coffee.SoftMaskForUGUI.Editor.csproj" />
   <Project Path="Unity.PlayerPrefsEditor.EditorResources.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
 </Solution>

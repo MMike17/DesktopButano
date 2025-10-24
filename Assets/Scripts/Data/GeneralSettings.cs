@@ -42,8 +42,13 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public ProjectTicket projectTicketPrefab;
 	[Space]
 	public string projectCustomDirName;
+	public string projectRomNameFlag;
 
 	[Header(nameof(ProjectExplorer))]
+	public string makefileSeparatorFlag;
+	public string makefileRomNameFlag;
+	public string makefileRomCodeFlag;
+	[Space]
 	public FileTicket explorerFilePrefab;
 	[TextArea]
 	public string detailsImageWarning;

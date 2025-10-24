@@ -21,7 +21,7 @@ MonoBehaviour:
     targetScript: ProjectExplorer
     targetIndex: 0
   - state: 0
-    title: Set settings UI to saved value
+    title: Set UI to saved values
     targetScriptIndex: 0
     targetScript: ProjectExplorer
     targetIndex: 1

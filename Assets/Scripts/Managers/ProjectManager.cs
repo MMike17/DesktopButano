@@ -307,7 +307,7 @@ public class ProjectManager : MonoBehaviour
 			// adjust files
 			List<FileInfo> files = new List<FileInfo>(new DirectoryInfo(targetPath).GetFiles());
 			FileInfo makefile = files.Find(file => file.Name == "Makefile");
-			File.WriteAllText(makefile.FullName, File.ReadAllText(makefile.FullName).Replace("ROM TITLE", name));
+			File.WriteAllText(makefile.FullName, File.ReadAllText(makefile.FullName).Replace(settings.projectRomNameFlag, name));
 
 			CheckPaths();
 		}

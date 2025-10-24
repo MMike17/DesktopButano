@@ -22,14 +22,16 @@ MonoBehaviour:
   projectButanoMessage: Select path to/for Butano installation
   projectButanoURLVersion: https://github.com/GValiente/butano/releases/latest
   projectButanoURLDownload: https://github.com/GValiente/butano/archive/refs/tags/
-  projectVersionFormat: 'Local Butano version is {0} but the latest is {1}.
-
-    Do
-    you want to update the Butano version ?'
+  projectVersionFormat: "Local Butano version is {0} but the latest is {1}.\nDo you
+    want to update the Butano version ?\t"
   projectVersionOkTag: 6
   projectVersionNoTag: 7
   projectTicketPrefab: {fileID: 784899459084144648, guid: 4ffaf66e70fe2a24c9f5b226862387f1, type: 3}
   projectCustomDirName: UserData
+  projectRomNameFlag: ROM TITLE
+  makefileSeparatorFlag: ':=  '
+  makefileRomNameFlag: ROMTITLE
+  makefileRomCodeFlag: ROMCODE
   explorerFilePrefab: {fileID: 8974966864692609237, guid: a25359d3e3ad1aa4881480c9a4e28c98, type: 3}
   detailsImageWarning: 'The provided file is not of the right format.
 

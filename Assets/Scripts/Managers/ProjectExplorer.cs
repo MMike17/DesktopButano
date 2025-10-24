@@ -44,6 +44,7 @@ public class ProjectExplorer : Panel
 	private DirectoryInfo project;
 	private GeneralSettings settings;
 	private List<FileTicket> tickets;
+	private List<string> makefileLines;
 
 	private void Awake()
 	{
@@ -56,13 +57,21 @@ public class ProjectExplorer : Panel
 		this.project = project;
 		projectTitle.text = project.Name;
 
+		makefileLines = new List<string>(File.ReadAllLines(Path.Combine(project.FullName, "Makefile")));
+
 		returnButton.onClick.RemoveAllListeners();
 		returnButton.onClick.AddListener(() => OnReturn());
 
 		settingsButton.onClick.RemoveAllListeners();
 		settingsButton.onClick.AddListener(() =>
 		{
+			int lineIndex = GetMakefileLineIndex(new[] { settings.makefileRomNameFlag, settings.makefileSeparatorFlag });
+			settingsRomNameInput.text = makefileLines[lineIndex].Split(settings.makefileSeparatorFlag)[1].Split('\n')[0];
+
+			lineIndex = GetMakefileLineIndex(new[] { settings.makefileRomCodeFlag, settings.makefileSeparatorFlag });
+			settingsRomCodeInput.text = makefileLines[lineIndex].Split(settings.makefileSeparatorFlag)[1].Split('\n')[0];
 			// SETT : Set fields to saved settings
+
 			settingsPanel.Pop();
 		});
 
@@ -76,7 +85,16 @@ public class ProjectExplorer : Panel
 		settingsSaveButton.onClick.RemoveAllListeners();
 		settingsSaveButton.onClick.AddListener(() =>
 		{
+			int lineIndex = GetMakefileLineIndex(new[] { settings.makefileRomNameFlag, settings.makefileSeparatorFlag });
+			makefileLines[lineIndex] = makefileLines[lineIndex].Split(settings.makefileSeparatorFlag)[0] +
+				settings.makefileSeparatorFlag + settingsRomNameInput.text;
+
+			lineIndex = GetMakefileLineIndex(new[] { settings.makefileRomCodeFlag, settings.makefileSeparatorFlag });
+			makefileLines[lineIndex] = makefileLines[lineIndex].Split(settings.makefileSeparatorFlag)[0] +
+				settings.makefileSeparatorFlag + settingsRomCodeInput.text;
 			// SETT : Save settings
+
+			File.WriteAllLines(Path.Combine(project.FullName, "Makefile"), makefileLines);
 			settingsPanel.gameObject.SetActive(false);
 		});
 
@@ -98,7 +116,6 @@ public class ProjectExplorer : Panel
 		// TODO : Rename project
 		// TODO : Build
 		// TODO : Check settings before build
-		// TODO : Set ROM code and name
 		// TODO : Set ROM names from project name by default
 		// TODO : Open category folder
 
@@ -145,5 +162,21 @@ public class ProjectExplorer : Panel
 				}
 			});
 		}
+	}
+
+	private int GetMakefileLineIndex(string[] tags)
+	{
+		string line = makefileLines.Find(line =>
+		{
+			foreach (string tag in tags)
+			{
+				if (!line.Contains(tag))
+					return false;
+			}
+
+			return true;
+		});
+
+		return makefileLines.IndexOf(line);
 	}
 }

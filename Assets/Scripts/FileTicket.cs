@@ -17,8 +17,9 @@ public class FileTicket : MonoBehaviour
 	{
 		nameText.text = file.Name;
 		extensionText.text = file.Extension;
-		flagText.enabled = file.Extension == ".bmp";
+		flagText.enabled = file.Extension != ".bmp";
 
+		selectButton.onClick.RemoveAllListeners();
 		selectButton.onClick.AddListener(() => OnSelect?.Invoke());
 	}
 }

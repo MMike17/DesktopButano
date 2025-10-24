@@ -50,6 +50,8 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public string makefileRomCodeFlag;
 	[Space]
 	public FileTicket explorerFilePrefab;
+	public string explorerImageFolder;
+	[Space]
 	[TextArea]
 	public string detailsImageWarning;
 }

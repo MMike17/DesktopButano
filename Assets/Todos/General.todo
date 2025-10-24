@@ -8,6 +8,7 @@ x Add settings panel
 x Explore files : images
 x Manage invalid assets
 x Add folder for data when creating project
+x Settings for project
 - Explore files : code
 - Explore files : sound
 - Explore files : other
@@ -18,5 +19,4 @@ x Add folder for data when creating project
 - Duplicate asset ?
 - Delete asset (+ hotkeys)
 - Move asset ?
-- Settings for project
 - Add project last opened date

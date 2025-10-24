@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using B83.Image.BMP;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+using Debug = UnityEngine.Debug;
 
 /// <summary>Used to explore projects and operate on assets</summary>
 public class ProjectExplorer : Panel
@@ -16,6 +19,7 @@ public class ProjectExplorer : Panel
 	public Button playButton;
 	[Space]
 	public Toggle imageToggle;
+	public Button openFolderButton;
 	[Space]
 	public Transform explorerList;
 	[Space]
@@ -110,9 +114,12 @@ public class ProjectExplorer : Panel
 			}
 		});
 
+		openFolderButton.onClick.AddListener(() =>
+		{
+			Process.Start("explorer.exe", Path.Combine(project.FullName, settings.explorerImageFolder).Replace("/", "\\"));
+		});
+
 		// TODO : Asset type selectors
-		// TODO : Project settings
-		// TODO : Preview Image
 		// TODO : Preview Sound
 		// TODO : Preview code
 		// TODO : Open asset with external program
@@ -120,7 +127,6 @@ public class ProjectExplorer : Panel
 		// TODO : Build
 		// TODO : Check settings before build
 		// TODO : Set ROM names from project name by default
-		// TODO : Open category folder
 
 		base.Pop();
 		RefreshExplorer();
@@ -130,7 +136,7 @@ public class ProjectExplorer : Panel
 	{
 		string dir = selectedType switch
 		{
-			FileType.image => "graphics"
+			FileType.image => settings.explorerImageFolder
 		};
 
 		foreach (FileInfo file in new DirectoryInfo(Path.Combine(project.FullName, dir)).GetFiles())
@@ -154,6 +160,7 @@ public class ProjectExplorer : Panel
 				detailsWarning.SetActive(file.Extension != ".bmp");
 
 				imageDetails.SetActive(selectedType == FileType.image);
+				imagePreview.SetActive(selectedType == FileType.image);
 
 				switch (selectedType)
 				{

@@ -33,6 +33,7 @@ MonoBehaviour:
   makefileRomNameFlag: ROMTITLE
   makefileRomCodeFlag: ROMCODE
   explorerFilePrefab: {fileID: 8974966864692609237, guid: a25359d3e3ad1aa4881480c9a4e28c98, type: 3}
+  explorerImageFolder: graphics
   detailsImageWarning: 'The provided file is not of the right format.
 
     Butano

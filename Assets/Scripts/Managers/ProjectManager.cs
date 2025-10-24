@@ -356,7 +356,7 @@ public class ProjectManager : MonoBehaviour
 		foreach (Transform ticket in projectList)
 			ticket.gameObject.SetActive(false);
 
-		foreach (DirectoryInfo dir in new DirectoryInfo(projectPathText.text).GetDirectories())
+		foreach (DirectoryInfo dir in new DirectoryInfo(PlayerPrefs.GetString(settings.projectRootKey)).GetDirectories())
 		{
 			if (IsDirButanoProject(dir))
 			{

@@ -67,6 +67,7 @@ public class ProjectExplorer : Panel
 		playButton.onClick.RemoveAllListeners();
 		playButton.onClick.AddListener(() =>
 		{
+			// TODO : Show warning about invalid assets (what happens if I try to build with invalid pictures ?)
 			// TODO : Add game build and start
 		});
 

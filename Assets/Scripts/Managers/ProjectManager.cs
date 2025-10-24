@@ -301,6 +301,10 @@ public class ProjectManager : MonoBehaviour
 
 		if (result == 0)
 		{
+			// create custom dir
+			Directory.CreateDirectory(Path.Combine(targetPath, settings.projectCustomDirName));
+
+			// adjust files
 			List<FileInfo> files = new List<FileInfo>(new DirectoryInfo(targetPath).GetFiles());
 			FileInfo makefile = files.Find(file => file.Name == "Makefile");
 			File.WriteAllText(makefile.FullName, File.ReadAllText(makefile.FullName).Replace("ROM TITLE", name));

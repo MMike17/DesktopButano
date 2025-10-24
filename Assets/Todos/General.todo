@@ -6,6 +6,8 @@ x Open project
 x Create new project
 x Add settings panel
 x Explore files : images
+x Manage invalid assets
+x Add folder for data when creating project
 - Explore files : code
 - Explore files : sound
 - Explore files : other
@@ -17,5 +19,3 @@ x Explore files : images
 - Delete asset (+ hotkeys)
 - Move asset ?
 - Settings for project
-- Add folder for data when creating project
-- Manage invalid assets

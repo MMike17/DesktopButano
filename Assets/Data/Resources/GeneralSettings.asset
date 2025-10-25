@@ -27,10 +27,10 @@ MonoBehaviour:
   projectVersionOkTag: 6
   projectVersionNoTag: 7
   projectTicketPrefab: {fileID: 784899459084144648, guid: 4ffaf66e70fe2a24c9f5b226862387f1, type: 3}
-  projectDeleteErrorFormat: 'Couldn''t delete project {0}
+  projectDeleteErrorFormat: 'Couldn''t delete project {0}.
 
     Error : {1}'
-  projectCreateErrorFormat: 'Couldn''t delete asset {0}
+  projectCreateErrorFormat: 'Couldn''t delete asset {0}.
 
     Error : {1}'
   projectCustomDirName: UserData
@@ -44,3 +44,5 @@ MonoBehaviour:
 
     Butano
     only supports .bmp images.'
+  assetDeleteMessageFormat: Are you sure you want to remove {0} ?
+  assetDeleteErrorFormat: Couldn't remove {0}.

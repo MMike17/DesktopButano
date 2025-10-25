@@ -51,12 +51,22 @@ public class ProjectExplorer : Panel
 	private BMPLoader bmpLoader;
 	private List<FileTicket> tickets;
 	private List<string> makefileLines;
+	private FileInfo selected;
 
 	private void Awake()
 	{
 		tickets = new List<FileTicket>();
 		settings = GeneralSettings.Get();
 		bmpLoader = new BMPLoader();
+	}
+
+	private void Update()
+	{
+		if (GeneralManager.HasOverlay())
+			return;
+
+		if (selected != null && Input.GetKeyDown(KeyCode.Delete))
+			DeleteAsset(selected);
 	}
 
 	public void Pop(DirectoryInfo project, Action OnReturn)
@@ -153,38 +163,42 @@ public class ProjectExplorer : Panel
 			}
 
 			ticket.Init(file, () =>
-			{
-				detailsNameText.text = file.Name;
-				detailsExtensionText.text = file.Extension;
-				detailsSizeText.text = file.Length + "o";
-				detailsWarning.SetActive(file.Extension != ".bmp");
-
-				imageDetails.SetActive(selectedType == FileType.image);
-				imagePreview.SetActive(selectedType == FileType.image);
-
-				switch (selectedType)
 				{
-					case FileType.image:
-						Texture2D texture = null;
+					selected = file;
 
-						try
-						{
-							texture = bmpLoader.LoadBMP(File.ReadAllBytes(file.FullName)).ToTexture2D();
-						}
-						catch (Exception ex)
-						{
-							Debug.Log(ex);
-						}
+					detailsNameText.text = file.Name;
+					detailsExtensionText.text = file.Extension;
+					detailsSizeText.text = file.Length + "o";
+					detailsWarning.SetActive(file.Extension != ".bmp");
 
-						imagePreviewTexture.enabled = texture != null;
+					imageDetails.SetActive(selectedType == FileType.image);
+					imagePreview.SetActive(selectedType == FileType.image);
 
-						if (imagePreviewTexture.enabled)
-							imagePreviewTexture.texture = texture;
+					switch (selectedType)
+					{
+						case FileType.image:
+							Texture2D texture = null;
 
-						imageDetailsDimentions.text = texture.width + "x" + texture.height;
-						break;
-				}
-			});
+							try
+							{
+								texture = bmpLoader.LoadBMP(File.ReadAllBytes(file.FullName)).ToTexture2D();
+							}
+							catch (Exception ex)
+							{
+								Debug.Log(ex);
+							}
+
+							imagePreviewTexture.enabled = texture != null;
+
+							if (imagePreviewTexture.enabled)
+								imagePreviewTexture.texture = texture;
+
+							imageDetailsDimentions.text = texture.width + "x" + texture.height;
+							break;
+					}
+				},
+				DeleteAsset
+			);
 		}
 
 		tickets.Find(item => item.gameObject.activeSelf).GetComponent<FileTicket>().selectButton.onClick.Invoke();
@@ -204,5 +218,18 @@ public class ProjectExplorer : Panel
 		});
 
 		return makefileLines.IndexOf(line);
+	}
+
+	private void DeleteAsset(FileInfo file)
+	{
+		GeneralManager.PopChoice(
+			string.Format(settings.assetDeleteMessageFormat, file.Name),
+			null,
+			() =>
+			{
+				IOHelper.DeleteFile(file, settings.assetDeleteErrorFormat);
+				RefreshExplorer();
+			}
+		);
 	}
 }

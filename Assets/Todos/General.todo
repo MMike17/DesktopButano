@@ -9,6 +9,7 @@ x Explore files : images
 x Manage invalid assets
 x Add folder for data when creating project
 x Settings for project
+x Delete asset (+ hotkeys)
 - Explore files : code
 - Explore files : sound
 - Explore files : other
@@ -17,6 +18,5 @@ x Settings for project
 - Settings for external apps
 - Settings for cores
 - Duplicate asset ?
-- Delete asset (+ hotkeys)
 - Move asset ?
 - Add project last opened date

@@ -59,4 +59,9 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	[Space]
 	[TextArea]
 	public string detailsImageWarning;
+	[Space]
+	[TextArea]
+	public string assetDeleteMessageFormat;
+	[TextArea]
+	public string assetDeleteErrorFormat;
 }

@@ -73,13 +73,13 @@ public static class IOHelper
 			GeneralManager.PopError(string.Format(errorFormat, dir.Name, result));
 	}
 
-	public static void CopyFolder(string name, string from, string to, string errorFormat, Action OnDone)
+	public static void CopyFolder(DirectoryInfo from, DirectoryInfo to, string errorFormat, Action OnDone)
 	{
 		SHFILEOPSTRUCT shf = new SHFILEOPSTRUCT
 		{
 			wFunc = FileOperationType.FO_COPY,
-			pFrom = from + '\0' + '\0',
-			pTo = to + '\0' + '\0',
+			pFrom = from.FullName + '\0' + '\0',
+			pTo = to.FullName + '\0' + '\0',
 			fFlags = FileOperationFlags.FOF_NOCONFIRMATION | FileOperationFlags.FOF_SILENT | FileOperationFlags.FOF_NOERRORUI,
 			hwnd = IntPtr.Zero,
 			fAnyOperationsAborted = false,
@@ -92,11 +92,21 @@ public static class IOHelper
 		if (result == 0)
 			OnDone?.Invoke();
 		else
-			GeneralManager.PopError(string.Format(errorFormat, name, result));
+			GeneralManager.PopError(string.Format(errorFormat, to.Name, result));
 	}
 
-	public static void DeleteFile(string path)
+	public static void DeleteFile(FileInfo file, string errorFormat)
 	{
-		//
+		SHFILEOPSTRUCT shf = new SHFILEOPSTRUCT
+		{
+			wFunc = FileOperationType.FO_DELETE,
+			pFrom = file.FullName + '\0' + '\0',
+			fFlags = FileOperationFlags.FOF_ALLOWUNDO | FileOperationFlags.FOF_NOCONFIRMATION
+		};
+
+		int result = SHFileOperation(ref shf);
+
+		if (result != 0)
+			GeneralManager.PopError(string.Format(errorFormat, file.Name, result));
 	}
 }

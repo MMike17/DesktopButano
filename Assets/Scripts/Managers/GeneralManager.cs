@@ -34,6 +34,13 @@ public class GeneralManager : MonoBehaviour
 		}
 	}
 
+	public static bool HasOverlay()
+	{
+		return instance.errorPanel.gameObject.activeSelf ||
+			instance.progressPanel.gameObject.activeSelf ||
+			instance.choicePanel.gameObject.activeSelf;
+	}
+
 	public static void PopError(string message, Action onClick = null) => instance.errorPanel.Pop(message, onClick);
 
 	public static void PopProgress(string title, Func<bool> checkDone, Action onDone)

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Runtime.InteropServices;
 using SimpleFileBrowser;
 using TMPro;
 using UnityEngine;
@@ -230,9 +229,8 @@ public class ProjectManager : MonoBehaviour
 		string targetPath = Path.Combine(PlayerPrefs.GetString(settings.projectRootKey), name);
 
 		IOHelper.CopyFolder(
-			name,
-			Path.Combine(PlayerPrefs.GetString(settings.projectButanoKey), "template"),
-			targetPath,
+			new DirectoryInfo(Path.Combine(PlayerPrefs.GetString(settings.projectButanoKey), "template")),
+			new DirectoryInfo(targetPath),
 			settings.projectCreateErrorFormat,
 			() =>
 			{

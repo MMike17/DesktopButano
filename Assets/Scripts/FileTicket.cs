@@ -18,7 +18,7 @@ public class FileTicket : MonoBehaviour
 	{
 		gameObject.SetActive(true);
 
-		nameText.text = file.Name;
+		nameText.text = file.Name.Replace(file.Extension, "");
 		extensionText.text = file.Extension;
 		flagText.enabled = file.Extension != ".bmp";
 

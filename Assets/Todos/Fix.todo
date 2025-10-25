@@ -2,3 +2,4 @@ x Fix invalid asset detection
 - Fix choice panel double click
 - Select first element by default when exploring project
 - Fix extension in asset name
+- Fix explorer ticket reuse

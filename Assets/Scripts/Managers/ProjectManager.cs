@@ -42,42 +42,6 @@ public class ProjectManager : MonoBehaviour
 	public Button settingsCloseButton;
 	// SETT : Add ui for settings
 
-	[DllImport("shell32.dll", CharSet = CharSet.Auto)]
-	private static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOP);
-
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-	private struct SHFILEOPSTRUCT
-	{
-		public IntPtr hwnd;
-		public FileOperationType wFunc;
-		[MarshalAs(UnmanagedType.LPTStr)]
-		public string pFrom;
-		[MarshalAs(UnmanagedType.LPTStr)]
-		public string pTo;
-		public FileOperationFlags fFlags;
-		public bool fAnyOperationsAborted;
-		public IntPtr hNameMappings;
-		[MarshalAs(UnmanagedType.LPTStr)]
-		public string lpszProgressTitle;
-	}
-
-	[Flags]
-	private enum FileOperationFlags : ushort
-	{
-		FOF_ALLOWUNDO = 0x0040, // move to recycle
-		FOF_NOCONFIRMATION = 0x0010, // no confirmation dialogue
-		FOF_SILENT = 0x0004, // no progression dialogue
-		FOF_NOERRORUI = 0x0400 // no error UI
-	}
-
-	private enum FileOperationType : uint
-	{
-		FO_MOVE = 0x0001,
-		FO_COPY = 0x0002,
-		FO_DELETE = 0x0003,
-		FO_RENAME = 0x0004,
-	}
-
 	private GeneralSettings _settings;
 	private GeneralSettings settings
 	{
@@ -260,59 +224,32 @@ public class ProjectManager : MonoBehaviour
 			dir.GetDirectories("src").Length > 0;
 	}
 
-	private void DeleteProject(DirectoryInfo dir)
-	{
-		SHFILEOPSTRUCT shf = new SHFILEOPSTRUCT
-		{
-			wFunc = FileOperationType.FO_DELETE,
-			pFrom = dir.FullName + '\0' + '\0', // double null is required
-			fFlags = FileOperationFlags.FOF_ALLOWUNDO | FileOperationFlags.FOF_NOCONFIRMATION | FileOperationFlags.FOF_SILENT,
-			hwnd = IntPtr.Zero,
-			pTo = null,
-			fAnyOperationsAborted = false,
-			hNameMappings = IntPtr.Zero,
-			lpszProgressTitle = null
-		};
-
-		int result = SHFileOperation(ref shf);
-
-		if (result != 0)
-			GeneralManager.PopError("Couldn't delete project " + dir.Name + "\nError : " + result);
-	}
-
 	private void CreateProject(string name)
 	{
 		createProjectPanel.gameObject.SetActive(false);
 		string targetPath = Path.Combine(PlayerPrefs.GetString(settings.projectRootKey), name);
 
-		SHFILEOPSTRUCT shf = new SHFILEOPSTRUCT
-		{
-			wFunc = FileOperationType.FO_COPY,
-			pFrom = Path.Combine(PlayerPrefs.GetString(settings.projectButanoKey), "template") + '\0' + '\0',
-			pTo = targetPath + '\0' + '\0',
-			fFlags = FileOperationFlags.FOF_NOCONFIRMATION | FileOperationFlags.FOF_SILENT | FileOperationFlags.FOF_NOERRORUI,
-			hwnd = IntPtr.Zero,
-			fAnyOperationsAborted = false,
-			hNameMappings = IntPtr.Zero,
-			lpszProgressTitle = null,
-		};
+		IOHelper.CopyFolder(
+			name,
+			Path.Combine(PlayerPrefs.GetString(settings.projectButanoKey), "template"),
+			targetPath,
+			settings.projectCreateErrorFormat,
+			() =>
+			{
+				// create custom dir
+				Directory.CreateDirectory(Path.Combine(targetPath, settings.projectCustomDirName));
 
-		int result = SHFileOperation(ref shf);
+				// adjust files
+				List<FileInfo> files = new List<FileInfo>(new DirectoryInfo(targetPath).GetFiles());
+				FileInfo makefile = files.Find(file => file.Name == "Makefile");
+				File.WriteAllText(
+					makefile.FullName,
+					File.ReadAllText(makefile.FullName).Replace(settings.projectRomNameFlag, name)
+				);
 
-		if (result == 0)
-		{
-			// create custom dir
-			Directory.CreateDirectory(Path.Combine(targetPath, settings.projectCustomDirName));
-
-			// adjust files
-			List<FileInfo> files = new List<FileInfo>(new DirectoryInfo(targetPath).GetFiles());
-			FileInfo makefile = files.Find(file => file.Name == "Makefile");
-			File.WriteAllText(makefile.FullName, File.ReadAllText(makefile.FullName).Replace(settings.projectRomNameFlag, name));
-
-			CheckPaths();
-		}
-		else
-			GeneralManager.PopError("Couldn't create project " + name + "\nError : " + result);
+				CheckPaths();
+			}
+		);
 	}
 
 	public void CheckPaths()
@@ -386,7 +323,7 @@ public class ProjectManager : MonoBehaviour
 						null,
 						() =>
 						{
-							DeleteProject(dir);
+							IOHelper.DeleteFolder(dir, settings.projectDeleteErrorFormat);
 							CheckPaths();
 						}
 					)

@@ -1,4 +1,5 @@
 using UnityEngine;
+
 using static Skinning;
 
 #if UNITY_EDITOR
@@ -40,6 +41,10 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public SkinTag projectVersionNoTag;
 	[Space]
 	public ProjectTicket projectTicketPrefab;
+	[TextArea]
+	public string projectDeleteErrorFormat;
+	[TextArea]
+	public string projectCreateErrorFormat;
 	[Space]
 	public string projectCustomDirName;
 	public string projectRomNameFlag;

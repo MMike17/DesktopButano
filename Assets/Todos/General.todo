@@ -20,3 +20,4 @@ x Delete asset (+ hotkeys)
 - Duplicate asset ?
 - Move asset ?
 - Add project last opened date
+- Should I refactor for a cmd method/class ?

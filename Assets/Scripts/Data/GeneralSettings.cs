@@ -28,6 +28,7 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public string projectRootMessage;
 	public string projectButanoKey;
 	public string projectButanoMessage;
+	public string projectCoresKey;
 	[Space]
 	[TextArea]
 	public string projectButanoURLVersion;
@@ -48,6 +49,13 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	[Space]
 	public string projectCustomDirName;
 	public string projectRomNameFlag;
+	[Space]
+	[TextArea]
+	public string projectBuildMessage;
+	[TextArea]
+	public string projectBuildError;
+	[TextArea]
+	public string projectPlayError;
 
 	[Header(nameof(ProjectExplorer))]
 	public string makefileSeparatorFlag;

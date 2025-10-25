@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -53,6 +54,7 @@ public class ProjectExplorer : Panel
 	private List<FileTicket> tickets;
 	private List<string> makefileLines;
 	private FileInfo selected;
+	private bool isWaiting;
 
 	private void Awake()
 	{
@@ -94,11 +96,7 @@ public class ProjectExplorer : Panel
 		});
 
 		playButton.onClick.RemoveAllListeners();
-		playButton.onClick.AddListener(() =>
-		{
-			// TODO : Show warning about invalid assets (what happens if I try to build with invalid pictures ?)
-			// TODO : Add game build and start
-		});
+		playButton.onClick.AddListener(() => BuildProject());
 
 		settingsSaveButton.onClick.RemoveAllListeners();
 		settingsSaveButton.onClick.AddListener(() =>
@@ -135,7 +133,6 @@ public class ProjectExplorer : Panel
 		// TODO : Preview code
 		// TODO : Open asset with external program
 		// TODO : Rename project
-		// TODO : Build
 		// TODO : Check settings before build
 		// TODO : Set ROM names from project name by default
 
@@ -240,5 +237,78 @@ public class ProjectExplorer : Panel
 				RefreshExplorer();
 			}
 		);
+	}
+
+	private void BuildProject()
+	{
+		Process buildProcess = new Process()
+		{
+			StartInfo = new ProcessStartInfo()
+			{
+				FileName = "cmd.exe",
+				Arguments = "/c make -j" + PlayerPrefs.GetInt(settings.projectCoresKey, SystemInfo.processorCount),
+				UseShellExecute = false,
+				RedirectStandardError = true,
+				CreateNoWindow = true,
+				ErrorDialog = true,
+				WorkingDirectory = project.FullName
+			},
+			EnableRaisingEvents = true
+		};
+
+		isWaiting = true;
+		buildProcess.Exited += (s, e) => isWaiting = false;
+
+		int lineIndex = GetMakefileLineIndex(new[] { settings.makefileRomNameFlag, settings.makefileSeparatorFlag });
+		string projectName = makefileLines[lineIndex].Split(settings.makefileSeparatorFlag)[1].Split('\n')[0];
+		GeneralManager.PopProgress(
+			string.Format(settings.projectBuildMessage, projectName),
+			() => !isWaiting,
+			() => OnBuildDone(buildProcess)
+		);
+
+		buildProcess.Start();
+	}
+
+	private void OnBuildDone(Process buildProcess)
+	{
+		string errors = buildProcess.StandardError.ReadToEnd();
+
+		if (string.IsNullOrWhiteSpace(errors))
+			StartGame();
+		else
+			GeneralManager.PopError(settings.projectBuildError + "\n" + errors.Split('\n')[0]);
+	}
+
+	private void StartGame()
+	{
+		Process playProcess = new Process()
+		{
+			StartInfo = new ProcessStartInfo
+			{
+				FileName = "C:\\Program Files\\mGBA\\mGBA.exe",
+				Arguments = Path.Combine(project.FullName, project.Name + ".gba"),
+				UseShellExecute = false,
+				RedirectStandardError = true,
+				CreateNoWindow = true,
+				ErrorDialog = true
+			},
+			EnableRaisingEvents = true
+		};
+
+		playProcess.Exited += (s, e) => isWaiting = false;
+		StartCoroutine(WaitForError(playProcess));
+	}
+
+	private IEnumerator WaitForError(Process playProcess)
+	{
+		isWaiting = true;
+		playProcess.Start();
+
+		yield return new WaitUntil(() => !isWaiting);
+		string errors = playProcess.StandardError.ReadToEnd();
+
+		if (!string.IsNullOrEmpty(errors))
+			GeneralManager.PopError(settings.projectPlayError + "\n" + errors.Split('\n')[0]);
 	}
 }

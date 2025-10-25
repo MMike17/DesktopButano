@@ -20,6 +20,7 @@ MonoBehaviour:
   projectRootMessage: Select path to Butano projects folder
   projectButanoKey: Butano_path
   projectButanoMessage: Select path to/for Butano installation
+  projectCoresKey: Build_cores
   projectButanoURLVersion: https://github.com/GValiente/butano/releases/latest
   projectButanoURLDownload: https://github.com/GValiente/butano/archive/refs/tags/
   projectVersionFormat: "Local Butano version is {0} but the latest is {1}.\nDo you
@@ -35,6 +36,9 @@ MonoBehaviour:
     Error : {1}'
   projectCustomDirName: UserData
   projectRomNameFlag: ROM TITLE
+  projectBuildMessage: Building project {0}.gba
+  projectBuildError: Failed to build
+  projectPlayError: Failed to start emulator
   makefileSeparatorFlag: ':=  '
   makefileRomNameFlag: ROMTITLE
   makefileRomCodeFlag: ROMCODE

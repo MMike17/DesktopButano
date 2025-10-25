@@ -1,5 +1,8 @@
 x Fix invalid asset detection
+x Fix explorer ticket reuse
+x Fix explorer ticket deletion null ref (probably reuse bug)
 - Fix choice panel double click
 - Select first element by default when exploring project
 - Fix extension in asset name
-- Fix explorer ticket reuse
+- Fix image preview not crisp
+- Clear preview when no assets

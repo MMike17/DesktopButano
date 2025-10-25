@@ -5,6 +5,7 @@ using System.IO;
 using B83.Image.BMP;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 using Debug = UnityEngine.Debug;
@@ -149,6 +150,8 @@ public class ProjectExplorer : Panel
 			FileType.image => settings.explorerImageFolder
 		};
 
+		tickets.ForEach(ticket => ticket.gameObject.SetActive(false));
+
 		foreach (FileInfo file in new DirectoryInfo(Path.Combine(project.FullName, dir)).GetFiles())
 		{
 			if (file.Name == ".gitignore")
@@ -201,7 +204,13 @@ public class ProjectExplorer : Panel
 			);
 		}
 
-		tickets.Find(item => item.gameObject.activeSelf).GetComponent<FileTicket>().selectButton.onClick.Invoke();
+		FileTicket firstTicket = tickets.Find(item => item.gameObject.activeSelf);
+
+		if (firstTicket != null)
+		{
+			EventSystem.current.SetSelectedGameObject(firstTicket.selectButton.gameObject);
+			firstTicket.selectButton.onClick.Invoke();
+		}
 	}
 
 	private int GetMakefileLineIndex(string[] tags)

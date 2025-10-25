@@ -49,6 +49,7 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	[Space]
 	public string projectCustomDirName;
 	public string projectRomNameFlag;
+	public string projectRomCodeFlag;
 	[Space]
 	[TextArea]
 	public string projectBuildMessage;

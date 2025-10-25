@@ -134,7 +134,6 @@ public class ProjectExplorer : Panel
 		// TODO : Open asset with external program
 		// TODO : Rename project
 		// TODO : Check settings before build
-		// TODO : Set ROM names from project name by default
 
 		base.Pop();
 		RefreshExplorer();

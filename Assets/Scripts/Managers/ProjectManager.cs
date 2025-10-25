@@ -242,7 +242,9 @@ public class ProjectManager : MonoBehaviour
 				FileInfo makefile = files.Find(file => file.Name == "Makefile");
 				File.WriteAllText(
 					makefile.FullName,
-					File.ReadAllText(makefile.FullName).Replace(settings.projectRomNameFlag, name)
+					File.ReadAllText(makefile.FullName)
+						.Replace(settings.projectRomNameFlag, name)
+						.Replace(settings.projectRomCodeFlag, name.Length > 4 ? name.Substring(0, 4) : name)
 				);
 
 				CheckPaths();

@@ -36,6 +36,7 @@ MonoBehaviour:
     Error : {1}'
   projectCustomDirName: UserData
   projectRomNameFlag: ROM TITLE
+  projectRomCodeFlag: SBTP
   projectBuildMessage: Building project {0}.gba
   projectBuildError: Failed to build
   projectPlayError: Failed to start emulator

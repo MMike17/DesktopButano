@@ -1,16 +1,13 @@
 using System;
-using System.ComponentModel;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>Panel used to display the progress of a task</summary>
 public class ProgressPanel : Panel
 {
 	[Header(nameof(ProgressPanel))]
 	public TMP_Text titleText;
-	public Slider progressSlider;
-	public TMP_Text progressText;
+	public Transform spinner;
 
 	private GeneralSettings settings;
 	private Func<bool> CheckDone;
@@ -25,9 +22,6 @@ public class ProgressPanel : Panel
 		titleText.text = title;
 		CheckDone = checkDone;
 		OnDone = onDone;
-
-		progressSlider.value = 0;
-		progressText.text = "0%";
 		running = true;
 
 		base.Pop();
@@ -37,11 +31,7 @@ public class ProgressPanel : Panel
 	{
 		if (running)
 		{
-			float speed = progress >= settings.popupProgressCheck && !CheckDone() ?
-				settings.popupProgressSpeedSlow : settings.popupProgressSpeed;
-			progress += speed * Time.deltaTime;
-			progressSlider.value = progress;
-			progressText.text = Mathf.FloorToInt(progress * 100) + "%";
+			spinner.Rotate(0, 0, -settings.popupLoaderSpeed * Time.deltaTime);
 
 			if (progress >= 1 && CheckDone())
 			{

@@ -18,10 +18,7 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	[Header(nameof(GeneralManager))]
 	public SkinData skin;
 	[Space]
-	public float popupProgressSpeed;
-	public float popupProgressSpeedSlow;
-	[Range(0, 1)]
-	public float popupProgressCheck;
+	public float popupLoaderSpeed;
 
 	[Header(nameof(ProjectManager))]
 	public string projectRootKey;

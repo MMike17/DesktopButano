@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: GeneralSettings
   m_EditorClassIdentifier: 
   skin: {fileID: 11400000, guid: 51bc573fe3bcd02488eb22cf127aadfa, type: 2}
-  popupProgressSpeed: 0.7
-  popupProgressSpeedSlow: 0.3
-  popupProgressCheck: 0.7
+  popupLoaderSpeed: 100
   projectRootKey: Root_path
   projectRootMessage: Select path to Butano projects folder
   projectButanoKey: Butano_path

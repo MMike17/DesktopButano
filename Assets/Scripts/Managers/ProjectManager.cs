@@ -38,6 +38,12 @@ public class ProjectManager : MonoBehaviour
 	public TMP_Text projectPathText;
 	public Button butanoPathButton;
 	public TMP_Text butanoPathText;
+	public TMP_InputField codeToolInput;
+	public Button codeToolPickButton;
+	public TMP_InputField imageToolInput;
+	public Button imageToolPickButton;
+	public TMP_InputField soundToolInput;
+	public Button soundToolPickButton;
 	public Button settingsCloseButton;
 	// SETT : Add ui for settings
 
@@ -84,11 +90,45 @@ public class ProjectManager : MonoBehaviour
 			// SETT : Set fields to saved settings
 			projectPathText.text = PlayerPrefs.GetString(settings.projectRootKey);
 			butanoPathText.text = PlayerPrefs.GetString(settings.projectButanoKey);
+			codeToolInput.text = PlayerPrefs.GetString(settings.projectCodeKey);
+			imageToolInput.text = PlayerPrefs.GetString(settings.projectImageKey);
+			soundToolInput.text = PlayerPrefs.GetString(settings.projectSoundKey);
 			settingsPanel.Pop();
 		});
 
 		projectPathButton.onClick.AddListener(() => AskForRoot());
 		butanoPathButton.onClick.AddListener(() => AskForButano());
+
+		codeToolPickButton.onClick.AddListener(() =>
+		{
+			FileBrowser.ShowLoadDialog(
+				paths => codeToolInput.SetTextWithoutNotify(paths[0]),
+				null,
+				FileBrowser.PickMode.Files,
+				false,
+				title: settings.projectCodeMessage
+			);
+		});
+		imageToolPickButton.onClick.AddListener(() =>
+		{
+			FileBrowser.ShowLoadDialog(
+				paths => imageToolInput.SetTextWithoutNotify(paths[0]),
+				null,
+				FileBrowser.PickMode.Files,
+				false,
+				title: settings.projectImageMessage
+			);
+		});
+		soundToolPickButton.onClick.AddListener(() =>
+		{
+			FileBrowser.ShowLoadDialog(
+				paths => soundToolInput.SetTextWithoutNotify(paths[0]),
+				null,
+				FileBrowser.PickMode.Files,
+				false,
+				title: settings.projectSoundMessage
+			);
+		});
 
 		createProjectButton.onClick.AddListener(() =>
 		{
@@ -103,6 +143,9 @@ public class ProjectManager : MonoBehaviour
 		settingsCloseButton.onClick.AddListener(() =>
 		{
 			// SETT : Save settings
+			PlayerPrefs.SetString(settings.projectCodeKey, codeToolInput.text);
+			PlayerPrefs.SetString(settings.projectImageKey, imageToolInput.text);
+			PlayerPrefs.SetString(settings.projectSoundKey, soundToolInput.text);
 			selectorPanel.Pop();
 		});
 	}

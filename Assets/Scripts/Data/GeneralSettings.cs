@@ -25,6 +25,12 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public string projectRootMessage;
 	public string projectButanoKey;
 	public string projectButanoMessage;
+	public string projectCodeKey;
+	public string projectCodeMessage;
+	public string projectImageKey;
+	public string projectImageMessage;
+	public string projectSoundKey;
+	public string projectSoundMessage;
 	public string projectCoresKey;
 	[Space]
 	[TextArea]

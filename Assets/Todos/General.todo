@@ -12,11 +12,11 @@ x Settings for project
 x Delete asset (+ hotkeys)
 x Explore files : code
 x Move asset ?
+x Settings for external apps
 - Explore files : sound
 - Explore files : other
 - Import asset(s)
 - Open file with linked app
-- Settings for external apps
 - Settings for cores
 - Add project last opened date
 - Should I refactor for a cmd method/class ?

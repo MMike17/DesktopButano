@@ -10,7 +10,7 @@ x Manage invalid assets
 x Add folder for data when creating project
 x Settings for project
 x Delete asset (+ hotkeys)
-- Explore files : code
+x Explore files : code
 - Explore files : sound
 - Explore files : other
 - Import asset(s)
@@ -21,3 +21,5 @@ x Delete asset (+ hotkeys)
 - Move asset ?
 - Add project last opened date
 - Should I refactor for a cmd method/class ?
+- Should I add a thing for the headers ? (include folder)
+- What are the details I need to know about a "code" asset ?

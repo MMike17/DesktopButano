@@ -21,6 +21,7 @@ public class ProjectExplorer : Panel
 	public Button playButton;
 	[Space]
 	public Toggle imageToggle;
+	public Toggle codeToggle;
 	public Button openFolderButton;
 	[Space]
 	public Transform explorerList;
@@ -36,14 +37,20 @@ public class ProjectExplorer : Panel
 	public TMP_Text imageDetailsDimentions;
 	public RawImage imagePreviewTexture;
 	[Space]
+	public GameObject codeDetails;
+	public GameObject codePreview;
+	public TMP_Text codeDetailsLines;
+	public TMP_Text codePreviewText;
+	[Space]
 	public Panel settingsPanel;
 	public Button settingsSaveButton;
 	public TMP_InputField settingsRomNameInput;
 	public TMP_InputField settingsRomCodeInput;
 	// SETT : Add settings ui
 
-	private enum FileType
+	public enum FileType
 	{
+		code,
 		image
 	}
 
@@ -114,15 +121,29 @@ public class ProjectExplorer : Panel
 			settingsPanel.gameObject.SetActive(false);
 		});
 
+		imageToggle.onValueChanged.RemoveAllListeners();
 		imageToggle.onValueChanged.AddListener(value =>
 		{
 			if (value)
 			{
 				selectedType = FileType.image;
+				imageToggle.transform.SetAsLastSibling();
 				RefreshExplorer();
 			}
 		});
 
+		codeToggle.onValueChanged.RemoveAllListeners();
+		codeToggle.onValueChanged.AddListener(value =>
+		{
+			if (value)
+			{
+				selectedType = FileType.code;
+				codeToggle.transform.SetAsLastSibling();
+				RefreshExplorer();
+			}
+		});
+
+		openFolderButton.onClick.RemoveAllListeners();
 		openFolderButton.onClick.AddListener(() =>
 		{
 			Process.Start("explorer.exe", Path.Combine(project.FullName, settings.explorerImageFolder).Replace("/", "\\"));
@@ -130,7 +151,6 @@ public class ProjectExplorer : Panel
 
 		// TODO : Asset type selectors
 		// TODO : Preview Sound
-		// TODO : Preview code
 		// TODO : Open asset with external program
 		// TODO : Rename project
 		// TODO : Check settings before build
@@ -143,7 +163,8 @@ public class ProjectExplorer : Panel
 	{
 		string dir = selectedType switch
 		{
-			FileType.image => settings.explorerImageFolder
+			FileType.image => settings.explorerImageFolder,
+			FileType.code => settings.explorerCodeFolder
 		};
 
 		tickets.ForEach(ticket => ticket.gameObject.SetActive(false));
@@ -161,43 +182,60 @@ public class ProjectExplorer : Panel
 				tickets.Add(ticket);
 			}
 
-			ticket.Init(file, () =>
+			ticket.Init(file, selectedType, valid =>
+			{
+				selected = file;
+
+				detailsNameText.text = file.Name.Replace(file.Extension, "");
+				detailsExtensionText.text = file.Extension;
+				detailsSizeText.text = file.Length + "o";
+
+				imageDetails.SetActive(selectedType == FileType.image);
+				imagePreview.SetActive(selectedType == FileType.image);
+
+				codeDetails.SetActive(selectedType == FileType.code);
+				codePreview.SetActive(selectedType == FileType.code);
+
+				switch (selectedType)
 				{
-					selected = file;
+					case FileType.image:
+						detailsWarning.SetActive(valid);
+						detailsWarningText.text = settings.detailsImageWarning;
+						Texture2D texture = null;
 
-					detailsNameText.text = file.Name;
-					detailsExtensionText.text = file.Extension;
-					detailsSizeText.text = file.Length + "o";
-					detailsWarning.SetActive(file.Extension != ".bmp");
+						try
+						{
+							texture = bmpLoader.LoadBMP(File.ReadAllBytes(file.FullName)).ToTexture2D();
+						}
+						catch (Exception ex)
+						{
+							Debug.Log(ex);
+						}
 
-					imageDetails.SetActive(selectedType == FileType.image);
-					imagePreview.SetActive(selectedType == FileType.image);
+						imagePreviewTexture.enabled = texture != null;
 
-					switch (selectedType)
-					{
-						case FileType.image:
-							Texture2D texture = null;
+						if (imagePreviewTexture.enabled)
+							imagePreviewTexture.texture = texture;
 
-							try
-							{
-								texture = bmpLoader.LoadBMP(File.ReadAllBytes(file.FullName)).ToTexture2D();
-							}
-							catch (Exception ex)
-							{
-								Debug.Log(ex);
-							}
+						imageDetailsDimentions.text = texture.width + "x" + texture.height;
+						break;
 
-							imagePreviewTexture.enabled = texture != null;
+					case FileType.code:
+						detailsWarning.SetActive(valid);
+						detailsWarningText.text = settings.detailsCodeWarning;
 
-							if (imagePreviewTexture.enabled)
-								imagePreviewTexture.texture = texture;
+						string content = string.Empty;
+						string[] lines = File.ReadAllLines(file.FullName);
 
-							imageDetailsDimentions.text = texture.width + "x" + texture.height;
-							break;
-					}
-				},
-				DeleteAsset
-			);
+						for (int i = 0; i < Mathf.Min(lines.Length, settings.detailsCodeMaxLines); i++)
+							content += lines[i] + "\n";
+
+						content.TrimEnd('\n');
+						codePreviewText.text = content;
+						codeDetailsLines.text = lines.Length.ToString();
+						break;
+				}
+			}, DeleteAsset);
 		}
 
 		FileTicket firstTicket = tickets.Find(item => item.gameObject.activeSelf);

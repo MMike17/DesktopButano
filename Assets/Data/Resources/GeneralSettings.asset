@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GeneralSettings
   m_EditorClassIdentifier: 
   skin: {fileID: 11400000, guid: 51bc573fe3bcd02488eb22cf127aadfa, type: 2}
-  popupLoaderSpeed: 100
+  popupLoaderSpeed: 300
   projectRootKey: Root_path
   projectRootMessage: Select path to Butano projects folder
   projectButanoKey: Butano_path
@@ -43,9 +43,15 @@ MonoBehaviour:
   makefileRomCodeFlag: ROMCODE
   explorerFilePrefab: {fileID: 8974966864692609237, guid: a25359d3e3ad1aa4881480c9a4e28c98, type: 3}
   explorerImageFolder: graphics
+  explorerCodeFolder: src
   detailsImageWarning: 'The provided file is not of the right format.
 
     Butano
     only supports .bmp images.'
+  detailsCodeWarning: 'The provided file is not of the right format.
+
+    Butano
+    only supports C++ code.'
+  detailsCodeMaxLines: 20
   assetDeleteMessageFormat: Are you sure you want to remove {0} ?
   assetDeleteErrorFormat: Couldn't remove {0}.

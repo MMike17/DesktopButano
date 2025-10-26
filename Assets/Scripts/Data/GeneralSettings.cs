@@ -62,9 +62,14 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	[Space]
 	public FileTicket explorerFilePrefab;
 	public string explorerImageFolder;
+	public string explorerCodeFolder;
 	[Space]
 	[TextArea]
 	public string detailsImageWarning;
+	[TextArea]
+	public string detailsCodeWarning;
+	[Space]
+	public int detailsCodeMaxLines;
 	[Space]
 	[TextArea]
 	public string assetDeleteMessageFormat;

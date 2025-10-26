@@ -168,15 +168,9 @@ public class ProjectExplorer : Panel
 
 	private void RefreshExplorer()
 	{
-		string dir = selectedType switch
-		{
-			FileType.image => settings.explorerImageFolder,
-			FileType.code => settings.explorerCodeFolder
-		};
-
 		tickets.ForEach(ticket => ticket.gameObject.SetActive(false));
 
-		foreach (FileInfo file in new DirectoryInfo(Path.Combine(project.FullName, dir)).GetFiles())
+		foreach (FileInfo file in new DirectoryInfo(Path.Combine(project.FullName, GetDirFromType(selectedType))).GetFiles())
 		{
 			if (file.Name == ".gitignore")
 				continue;
@@ -242,7 +236,20 @@ public class ProjectExplorer : Panel
 						codeDetailsLines.text = lines.Length.ToString();
 						break;
 				}
-			}, DeleteAsset);
+			},
+			() =>
+			{
+				List<string> choices = new List<string>(Enum.GetNames(typeof(FileType)));
+				choices.Remove(selectedType.ToString());
+
+				GeneralManager.PopEnum(
+					string.Format(settings.assetMoveMessageFormat, file.Name),
+					choices,
+					index => MoveAsset(file, (FileType)Enum.Parse(typeof(FileType), choices[index]))
+				);
+
+			},
+			DeleteAsset);
 		}
 
 		FileTicket firstTicket = tickets.Find(item => item.gameObject.activeSelf);
@@ -252,6 +259,15 @@ public class ProjectExplorer : Panel
 			EventSystem.current.SetSelectedGameObject(firstTicket.selectButton.gameObject);
 			firstTicket.selectButton.onClick.Invoke();
 		}
+	}
+
+	private string GetDirFromType(FileType type)
+	{
+		return type switch
+		{
+			FileType.image => settings.explorerImageFolder,
+			FileType.code => settings.explorerCodeFolder
+		};
 	}
 
 	private int GetMakefileLineIndex(string[] tags)
@@ -268,6 +284,13 @@ public class ProjectExplorer : Panel
 		});
 
 		return makefileLines.IndexOf(line);
+	}
+
+	private void MoveAsset(FileInfo file, FileType target)
+	{
+		File.Move(file.FullName, Path.Combine(project.FullName, GetDirFromType(target), file.Name));
+		// TODO : Add json asset def change as if it was a new import
+		RefreshExplorer();
 	}
 
 	private void DeleteAsset(FileInfo file)

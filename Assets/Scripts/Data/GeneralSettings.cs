@@ -75,4 +75,6 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public string assetDeleteMessageFormat;
 	[TextArea]
 	public string assetDeleteErrorFormat;
+	[TextArea]
+	public string assetMoveMessageFormat;
 }

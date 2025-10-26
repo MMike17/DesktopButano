@@ -55,3 +55,4 @@ MonoBehaviour:
   detailsCodeMaxLines: 20
   assetDeleteMessageFormat: Are you sure you want to remove {0} ?
   assetDeleteErrorFormat: Couldn't remove {0}.
+  assetMoveMessageFormat: Which folder to you want to move {0} to ?

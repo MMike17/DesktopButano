@@ -11,14 +11,13 @@ x Add folder for data when creating project
 x Settings for project
 x Delete asset (+ hotkeys)
 x Explore files : code
+x Move asset ?
 - Explore files : sound
 - Explore files : other
 - Import asset(s)
 - Open file with linked app
 - Settings for external apps
 - Settings for cores
-- Duplicate asset ?
-- Move asset ?
 - Add project last opened date
 - Should I refactor for a cmd method/class ?
 - Should I add a thing for the headers ? (include folder)

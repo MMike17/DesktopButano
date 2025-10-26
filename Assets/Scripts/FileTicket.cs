@@ -14,9 +14,10 @@ public class FileTicket : MonoBehaviour
 	public TMP_Text extensionText;
 	public TMP_Text flagText;
 	public Button selectButton;
+	public Button moveButton;
 	public Button deleteButton;
 
-	public void Init(FileInfo file, FileType type, Action<bool> OnSelect, Action<FileInfo> OnDelete)
+	public void Init(FileInfo file, FileType type, Action<bool> OnSelect, Action OnMove, Action<FileInfo> OnDelete)
 	{
 		gameObject.SetActive(true);
 
@@ -31,6 +32,9 @@ public class FileTicket : MonoBehaviour
 
 		selectButton.onClick.RemoveAllListeners();
 		selectButton.onClick.AddListener(() => OnSelect?.Invoke(flagText.enabled));
+
+		moveButton.onClick.RemoveAllListeners();
+		moveButton.onClick.AddListener(() => OnMove());
 
 		deleteButton.onClick.RemoveAllListeners();
 		deleteButton.onClick.AddListener(() => OnDelete?.Invoke(file));

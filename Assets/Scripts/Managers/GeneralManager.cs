@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class GeneralManager : MonoBehaviour
 	public ErrorPanel errorPanel;
 	public ProgressPanel progressPanel;
 	public ChoicePanel choicePanel;
+	public EnumPanel enumPanel;
 
 	private GeneralSettings settings;
 
@@ -49,6 +51,11 @@ public class GeneralManager : MonoBehaviour
 	}
 
 	public static void PopChoice(string message, Action onNo, Action onYes) => instance.choicePanel.Pop(message, onNo, onYes);
+
+	public static void PopEnum(string message, List<string> choices, Action<int> onSelected)
+	{
+		instance.enumPanel.Pop(message, choices, onSelected);
+	}
 
 	public static void OpenProject(DirectoryInfo project)
 	{

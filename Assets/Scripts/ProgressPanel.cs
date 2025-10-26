@@ -12,7 +12,6 @@ public class ProgressPanel : Panel
 	private GeneralSettings settings;
 	private Func<bool> CheckDone;
 	private Action OnDone;
-	private float progress;
 	private bool running;
 
 	public void Pop(string title, Func<bool> checkDone, Action onDone)
@@ -33,7 +32,7 @@ public class ProgressPanel : Panel
 		{
 			spinner.Rotate(0, 0, -settings.popupLoaderSpeed * Time.deltaTime);
 
-			if (progress >= 1 && CheckDone())
+			if (CheckDone())
 			{
 				running = false;
 				gameObject.SetActive(false);

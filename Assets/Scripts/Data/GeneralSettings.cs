@@ -78,9 +78,15 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public int detailsCodeMaxLines;
 	[Space]
 	[TextArea]
+	public string assetImportMessage;
+	[TextArea]
+	public string assetImportPickMessage;
+	[TextArea]
+	public string assetImportErrorFormat;
+	[TextArea]
+	public string assetMoveMessageFormat;
+	[TextArea]
 	public string assetDeleteMessageFormat;
 	[TextArea]
 	public string assetDeleteErrorFormat;
-	[TextArea]
-	public string assetMoveMessageFormat;
 }

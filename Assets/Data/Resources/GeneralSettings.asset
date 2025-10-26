@@ -18,6 +18,12 @@ MonoBehaviour:
   projectRootMessage: Select path to Butano projects folder
   projectButanoKey: Butano_path
   projectButanoMessage: Select path to/for Butano installation
+  projectCodeKey: Tools_code
+  projectCodeMessage: Select an application to open code assets
+  projectImageKey: Tools_image
+  projectImageMessage: Select an application to open image assets
+  projectSoundKey: Tools_sound
+  projectSoundMessage: Select an application to open sound assets
   projectCoresKey: Build_cores
   projectButanoURLVersion: https://github.com/GValiente/butano/releases/latest
   projectButanoURLDownload: https://github.com/GValiente/butano/archive/refs/tags/
@@ -53,6 +59,9 @@ MonoBehaviour:
     Butano
     only supports C++ code.'
   detailsCodeMaxLines: 20
+  assetImportMessage: Importing assets.
+  assetImportPickMessage: Please select a folder to copy {0} to.
+  assetImportErrorFormat: Couldn't find asset {0}.
+  assetMoveMessageFormat: Which folder to you want to move {0} to ?
   assetDeleteMessageFormat: Are you sure you want to remove {0} ?
   assetDeleteErrorFormat: Couldn't remove {0}.
-  assetMoveMessageFormat: Which folder to you want to move {0} to ?

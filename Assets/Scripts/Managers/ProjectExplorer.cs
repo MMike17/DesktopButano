@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using B83.Image.BMP;
-using SimpleFileBrowser;
+using B83.Win32;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -48,9 +48,12 @@ public class ProjectExplorer : Panel
 	public TMP_InputField settingsRomNameInput;
 	public TMP_InputField settingsRomCodeInput;
 	// SETT : Add settings ui
+	[Space]
+	public Panel dragAndDropPanel;
 
 	public enum FileType
 	{
+		ERROR,
 		code,
 		image
 	}
@@ -69,12 +72,33 @@ public class ProjectExplorer : Panel
 		tickets = new List<FileTicket>();
 		settings = GeneralSettings.Get();
 		bmpLoader = new BMPLoader();
+
+		selectedType = FileType.code;
+	}
+
+	private void OnEnable()
+	{
+		UnityDragAndDropHook.InstallHook();
+		UnityDragAndDropHook.OnDroppedFiles += ImportAssets;
+	}
+
+	private void OnDisable()
+	{
+		UnityDragAndDropHook.UninstallHook();
 	}
 
 	private void Update()
 	{
 		if (GeneralManager.HasOverlay())
 			return;
+
+		Vector2 viewportPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+		bool isOutOfWindow = viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1;
+
+		if (!isWaiting && !Application.isFocused && isOutOfWindow)
+			dragAndDropPanel.Pop();
+		else
+			dragAndDropPanel.gameObject.SetActive(false);
 
 		if (selected != null && Input.GetKeyDown(KeyCode.Delete))
 			DeleteAsset(selected);
@@ -160,7 +184,7 @@ public class ProjectExplorer : Panel
 		// TODO : Preview Sound
 		// TODO : Open asset with external program
 		// TODO : Rename project
-		// TODO : Check settings before build
+		// TODO : Check assets before build
 
 		base.Pop();
 		RefreshExplorer();
@@ -284,6 +308,80 @@ public class ProjectExplorer : Panel
 		});
 
 		return makefileLines.IndexOf(line);
+	}
+
+	private void ImportAssets(List<string> assetPaths, POINT point) => StartCoroutine(ImportRoutine(assetPaths));
+
+	private IEnumerator ImportRoutine(List<string> assetPaths)
+	{
+		if (isWaiting)
+			yield break;
+
+		PopProgress();
+
+		foreach (string assetPath in assetPaths)
+		{
+			FileInfo file = new FileInfo(assetPath);
+
+			if (file.Exists)
+			{
+				FileType detectedType = GetFileType(file);
+				string targetFolder = "";
+
+				if (detectedType == FileType.ERROR)
+				{
+					bool blocked = true;
+					List<string> choices = new List<string>(Enum.GetNames(typeof(FileType)));
+					isWaiting = false;
+
+					GeneralManager.PopEnum(
+						settings.assetImportPickMessage,
+						choices,
+						index =>
+						{
+							targetFolder = GetDirFromType((FileType)Enum.Parse(typeof(FileType), choices[index]));
+							blocked = false;
+						}
+					);
+
+					yield return new WaitUntil(() => blocked = false);
+					PopProgress();
+				}
+				else
+					targetFolder = GetDirFromType(detectedType);
+
+				File.Move(file.FullName, Path.Combine(project.FullName, targetFolder, file.Name));
+				// TODO : Generate the proper json files for that asset
+			}
+			else
+			{
+				bool blocked = true;
+				isWaiting = false;
+				GeneralManager.PopError(string.Format(settings.assetImportErrorFormat, file.Name), () => blocked = false);
+				yield return new WaitUntil(() => !blocked);
+				PopProgress();
+			}
+		}
+
+		isWaiting = false;
+		RefreshExplorer();
+
+		void PopProgress()
+		{
+			isWaiting = true;
+			GeneralManager.PopProgress(settings.assetImportMessage, () => isWaiting = false, null);
+		}
+	}
+
+	private FileType GetFileType(FileInfo file)
+	{
+		return file.Extension switch
+		{
+			".bmp" => FileType.image,
+			".cpp" => FileType.code,
+			_ => FileType.ERROR
+			// TODO : Add support for sound files here
+		};
 	}
 
 	private void MoveAsset(FileInfo file, FileType target)

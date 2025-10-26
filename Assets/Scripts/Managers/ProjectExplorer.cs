@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using B83.Image.BMP;
+using SimpleFileBrowser;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -146,7 +147,13 @@ public class ProjectExplorer : Panel
 		openFolderButton.onClick.RemoveAllListeners();
 		openFolderButton.onClick.AddListener(() =>
 		{
-			Process.Start("explorer.exe", Path.Combine(project.FullName, settings.explorerImageFolder).Replace("/", "\\"));
+			string targetFolder = selectedType switch
+			{
+				FileType.image => settings.explorerImageFolder,
+				FileType.code => settings.explorerCodeFolder
+			};
+
+			Process.Start("explorer.exe", Path.Combine(project.FullName, targetFolder).Replace("/", "\\"));
 		});
 
 		// TODO : Asset type selectors

@@ -60,8 +60,12 @@ MonoBehaviour:
     only supports C++ code.'
   detailsCodeMaxLines: 20
   assetImportMessage: Importing assets.
-  assetImportPickMessage: Please select a folder to copy {0} to.
+  assetImportPickMessage: Please select a folder to import {0} to.
   assetImportErrorFormat: Couldn't find asset {0}.
+  imageImportErrorFormat: 'Format error on asset {0}.
+
+    Butano only supports 4
+    or 8 bits per pixel format, asset has {1} bits per pixel.'
   assetMoveMessageFormat: Which folder to you want to move {0} to ?
   assetDeleteMessageFormat: Are you sure you want to remove {0} ?
   assetDeleteErrorFormat: Couldn't remove {0}.

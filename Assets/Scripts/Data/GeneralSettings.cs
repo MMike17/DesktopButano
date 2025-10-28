@@ -84,6 +84,8 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	[TextArea]
 	public string assetImportErrorFormat;
 	[TextArea]
+	public string imageImportErrorFormat;
+	[TextArea]
 	public string assetMoveMessageFormat;
 	[TextArea]
 	public string assetDeleteMessageFormat;

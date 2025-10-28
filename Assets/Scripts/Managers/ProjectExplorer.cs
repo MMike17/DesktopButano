@@ -230,7 +230,7 @@ public class ProjectExplorer : Panel
 
 						try
 						{
-							texture = bmpLoader.LoadBMP(File.ReadAllBytes(file.FullName)).ToTexture2D();
+							texture = bmpLoader.LoadBMP(file.FullName).ToTexture2D();
 						}
 						catch (Exception ex)
 						{
@@ -344,11 +344,40 @@ public class ProjectExplorer : Panel
 						}
 					);
 
-					yield return new WaitUntil(() => blocked = false);
+					yield return new WaitUntil(() => !blocked);
 					PopProgress();
 				}
 				else
+				{
+					switch (detectedType)
+					{
+						case FileType.image:
+							// check if image is 16 or 256 colors mode
+							using (FileStream stream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+							{
+								stream.Seek(28, SeekOrigin.Begin); // 0x1C offset
+								byte[] data = new byte[2];
+								stream.Read(data, 0, data.Length);
+								int bitsPerPixel = data[0] | (data[1] << 8); // bit shift to number
+
+								if (bitsPerPixel != 4 && bitsPerPixel != 8)
+								{
+									isWaiting = false;
+									bool blocked = true;
+									GeneralManager.PopError(
+										string.Format(settings.imageImportErrorFormat, file.Name, bitsPerPixel),
+										() => blocked = false
+									);
+									yield return new WaitUntil(() => !blocked);
+									PopProgress();
+									continue;
+								}
+							}
+							break;
+					}
+
 					targetFolder = GetDirFromType(detectedType);
+				}
 
 				File.Move(file.FullName, Path.Combine(project.FullName, targetFolder, file.Name));
 				// TODO : Generate the proper json files for that asset

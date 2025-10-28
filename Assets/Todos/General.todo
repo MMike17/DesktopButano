@@ -14,6 +14,7 @@ x Explore files : code
 x Move asset ?
 x Settings for external apps
 x Import asset(s)
+x Check if bmp images have 16 or 256 colors on import
 - Explore files : sound
 - Explore files : other
 - Open file with linked app
@@ -22,7 +23,6 @@ x Import asset(s)
 - Should I refactor for a cmd method/class ?
 - Should I add a thing for the headers ? (include folder)
 - What are the details I need to know about a "code" asset ?
-- Check if bmp images have 16 or 256 colors on import
 - Check if bmp has compression on import
 - Check if bmp has color space info on import
 - Generate asset data for images

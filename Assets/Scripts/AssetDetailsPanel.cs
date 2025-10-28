@@ -21,6 +21,7 @@ public class AssetDetailsPanel : MonoBehaviour
 	public GameObject imagePreview;
 	public TMP_Text imageDetailsDimentions;
 	public RawImage imagePreviewTexture;
+	public GameObject imagePreviewErrorText;
 	[Space]
 	public GameObject codeDetails;
 	public GameObject codePreview;
@@ -62,6 +63,7 @@ public class AssetDetailsPanel : MonoBehaviour
 				try
 				{
 					texture = bmpLoader.LoadBMP(asset.FullName).ToTexture2D();
+					texture.filterMode = FilterMode.Point;
 				}
 				catch (Exception ex)
 				{
@@ -69,6 +71,7 @@ public class AssetDetailsPanel : MonoBehaviour
 				}
 
 				imagePreviewTexture.enabled = texture != null;
+				imagePreviewErrorText.SetActive(texture == null);
 
 				if (imagePreviewTexture.enabled)
 					imagePreviewTexture.texture = texture;

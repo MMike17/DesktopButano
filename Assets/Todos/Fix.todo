@@ -4,8 +4,9 @@ x Fix explorer ticket deletion null ref (probably reuse bug)
 x Select first element by default when exploring project
 x Fix extension in asset name
 x Fix build process (check when invalid assets)
+x Fix image preview not crisp
 - Fix choice panel double click
-- Fix image preview not crisp
 - Clear preview when no assets
 - Replace the dropdown trash with my own (lmao)
 - Add filter on file picker for applications
+- Not sure transparency is working properly

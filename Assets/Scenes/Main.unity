@@ -7874,6 +7874,7 @@ MonoBehaviour:
   imagePreview: {fileID: 97242260}
   imageDetailsDimentions: {fileID: 1332523857}
   imagePreviewTexture: {fileID: 1929703684}
+  imagePreviewErrorText: {fileID: 754067003}
   codeDetails: {fileID: 1031783977}
   codePreview: {fileID: 897029875}
   codeDetailsLines: {fileID: 1805330620}

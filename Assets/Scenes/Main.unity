@@ -7052,18 +7052,7 @@ MonoBehaviour:
   createProjectPanel: {fileID: 940151904}
   createNameInput: {fileID: 1522110303}
   createButton: {fileID: 577435759}
-  settingsPanel: {fileID: 2090585991}
-  projectPathButton: {fileID: 1020509323}
-  projectPathText: {fileID: 535122402}
-  butanoPathButton: {fileID: 738903586}
-  butanoPathText: {fileID: 485635607}
-  codeToolInput: {fileID: 1241937381}
-  codeToolPickButton: {fileID: 1225658396}
-  imageToolInput: {fileID: 828622057}
-  imageToolPickButton: {fileID: 2111082835}
-  soundToolInput: {fileID: 997810011}
-  soundToolPickButton: {fileID: 663733841}
-  settingsCloseButton: {fileID: 1557149015}
+  engineSettingsPanel: {fileID: 2090585991}
 --- !u!1 &663024177
 GameObject:
   m_ObjectHideFlags: 0
@@ -22175,11 +22164,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 2090585989}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9760159a0dbfbe24f893f53f975cd62b, type: 3}
+  m_Script: {fileID: 11500000, guid: dafaef6cceb908143812068761633997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   overrides: 1
   fullScreen: 0
+  projectPathButton: {fileID: 1020509323}
+  projectPathText: {fileID: 535122402}
+  butanoPathButton: {fileID: 738903586}
+  butanoPathText: {fileID: 485635607}
+  codeToolInput: {fileID: 1241937381}
+  codeToolPickButton: {fileID: 1225658396}
+  imageToolInput: {fileID: 828622057}
+  imageToolPickButton: {fileID: 2111082835}
+  soundToolInput: {fileID: 997810011}
+  soundToolPickButton: {fileID: 663733841}
+  settingsCloseButton: {fileID: 1557149015}
 --- !u!1 &2099186924
 GameObject:
   m_ObjectHideFlags: 0

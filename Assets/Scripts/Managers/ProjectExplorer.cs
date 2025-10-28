@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using B83.Win32;
+using SimpleFileBrowser;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,6 +21,7 @@ public class ProjectExplorer : Panel
 	[Space]
 	public Toggle imageToggle;
 	public Toggle codeToggle;
+	public Toggle otherToggle;
 	public Button openFolderButton;
 	[Space]
 	public Transform explorerList;
@@ -37,7 +39,8 @@ public class ProjectExplorer : Panel
 	{
 		ERROR,
 		code,
-		image
+		image,
+		other
 	}
 
 	private FileType selectedType;
@@ -153,13 +156,25 @@ public class ProjectExplorer : Panel
 			}
 		});
 
+		otherToggle.onValueChanged.RemoveAllListeners();
+		otherToggle.onValueChanged.AddListener(value =>
+		{
+			if (value)
+			{
+				selectedType = FileType.other;
+				otherToggle.transform.SetAsLastSibling();
+				RefreshExplorer();
+			}
+		});
+
 		openFolderButton.onClick.RemoveAllListeners();
 		openFolderButton.onClick.AddListener(() =>
 		{
 			string targetFolder = selectedType switch
 			{
 				FileType.image => settings.explorerImageFolder,
-				FileType.code => settings.explorerCodeFolder
+				FileType.code => settings.explorerCodeFolder,
+				FileType.other => settings.projectCustomDirName
 			};
 
 			Process.Start("explorer.exe", Path.Combine(project.FullName, targetFolder).Replace("/", "\\"));
@@ -194,7 +209,11 @@ public class ProjectExplorer : Panel
 				file,
 				selectedType,
 				valid => assetDetailsPanel.ShowDetails(file, selectedType, valid),
-				() => OpenAssetExternal(file),
+				() =>
+				{
+					if (selectedType != FileType.other)
+						OpenAssetExternal(file);
+				},
 				() =>
 				{
 					List<string> choices = new List<string>(Enum.GetNames(typeof(FileType)));
@@ -224,7 +243,8 @@ public class ProjectExplorer : Panel
 		return type switch
 		{
 			FileType.image => settings.explorerImageFolder,
-			FileType.code => settings.explorerCodeFolder
+			FileType.code => settings.explorerCodeFolder,
+			FileType.other => settings.projectCustomDirName
 		};
 	}
 
@@ -314,7 +334,7 @@ public class ProjectExplorer : Panel
 				}
 
 				File.Move(file.FullName, Path.Combine(project.FullName, targetFolder, file.Name));
-				// TODO : Generate the proper json files for that asset
+				// Generate the proper json files for that asset
 			}
 			else
 			{

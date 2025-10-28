@@ -38,7 +38,7 @@ MonoBehaviour:
   projectCreateErrorFormat: 'Couldn''t delete asset {0}.
 
     Error : {1}'
-  projectCustomDirName: UserData
+  projectCustomDirName: userData
   projectRomNameFlag: ROM TITLE
   projectRomCodeFlag: SBTP
   projectBuildMessage: Building project {0}.gba

@@ -15,9 +15,9 @@ x Move asset ?
 x Settings for external apps
 x Import asset(s)
 x Check if bmp images have 16 or 256 colors on import
+x Open file with linked app
+x Explore files : other
 - Explore files : sound
-- Explore files : other
-- Open file with linked app
 - Settings for cores
 - Add project last opened date
 - Should I refactor for a cmd method/class ?
@@ -30,3 +30,7 @@ x Check if bmp images have 16 or 256 colors on import
 - Generate asset data for code
 - What the hell is bn::sprite_shape_size ?
 - Do I need to build the images into headers before I can use them in code ?
+- Add panel for asset configuration : image
+- Add panel for asset configuration : sound
+- Add panel for asset configuration : code
+- Pop configuration panel on import

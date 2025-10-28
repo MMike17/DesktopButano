@@ -79,8 +79,14 @@ public class ProjectExplorer : Panel
 		else
 			dragAndDropPanel.gameObject.SetActive(false);
 
-		if (assetDetailsPanel.selected != null && Input.GetKeyDown(KeyCode.Delete))
-			DeleteAsset(assetDetailsPanel.selected);
+		if (assetDetailsPanel.selected != null)
+		{
+			if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+				OpenAssetExternal(assetDetailsPanel.selected);
+
+			if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
+				DeleteAsset(assetDetailsPanel.selected);
+		}
 	}
 
 	public void Pop(DirectoryInfo project, Action OnReturn)
@@ -160,7 +166,6 @@ public class ProjectExplorer : Panel
 		});
 
 		// TODO : Asset type selectors
-		// TODO : Open asset with external program
 		// TODO : Rename project
 		// TODO : Check assets before build
 
@@ -185,20 +190,24 @@ public class ProjectExplorer : Panel
 				tickets.Add(ticket);
 			}
 
-			ticket.Init(file, selectedType, valid => assetDetailsPanel.ShowDetails(file, selectedType, valid),
-			() =>
-			{
-				List<string> choices = new List<string>(Enum.GetNames(typeof(FileType)));
-				choices.Remove(selectedType.ToString());
+			ticket.Init(
+				file,
+				selectedType,
+				valid => assetDetailsPanel.ShowDetails(file, selectedType, valid),
+				() => OpenAssetExternal(file),
+				() =>
+				{
+					List<string> choices = new List<string>(Enum.GetNames(typeof(FileType)));
+					choices.Remove(selectedType.ToString());
 
-				GeneralManager.PopEnum(
-					string.Format(settings.assetMoveMessageFormat, file.Name),
-					choices,
-					index => MoveAsset(file, (FileType)Enum.Parse(typeof(FileType), choices[index]))
-				);
-
-			},
-			DeleteAsset);
+					GeneralManager.PopEnum(
+						string.Format(settings.assetMoveMessageFormat, file.Name),
+						choices,
+						index => MoveAsset(file, (FileType)Enum.Parse(typeof(FileType), choices[index]))
+					);
+				},
+				DeleteAsset
+			);
 		}
 
 		FileTicket firstTicket = tickets.Find(item => item.gameObject.activeSelf);
@@ -345,6 +354,32 @@ public class ProjectExplorer : Panel
 		RefreshExplorer();
 	}
 
+	private void OpenAssetExternal(FileInfo file)
+	{
+		string toolPath = selectedType switch
+		{
+			FileType.image => PlayerPrefs.GetString(settings.projectImageKey, ""),
+			FileType.code => PlayerPrefs.GetString(settings.projectCodeKey, ""),
+			// TODO : Add support for sound assets
+		};
+
+		if (string.IsNullOrWhiteSpace(toolPath))
+		{
+			GeneralManager.PopError(string.Format(settings.noToolErrorFormat, selectedType));
+			return;
+		}
+
+		Process toolProcess = CreateProcess(toolPath, file.FullName, false);
+
+		if (!toolProcess.Start())
+		{
+			string errors = toolProcess.StandardError.ReadToEnd();
+
+			if (string.IsNullOrWhiteSpace(errors))
+				GeneralManager.PopError(string.Format(settings.imageToolErrorFormat, file.Name, errors.Split('\n')[0]));
+		}
+	}
+
 	private void DeleteAsset(FileInfo file)
 	{
 		GeneralManager.PopChoice(
@@ -360,20 +395,11 @@ public class ProjectExplorer : Panel
 
 	private void BuildProject()
 	{
-		Process buildProcess = new Process()
-		{
-			StartInfo = new ProcessStartInfo()
-			{
-				FileName = "cmd.exe",
-				Arguments = "/c make -j" + PlayerPrefs.GetInt(settings.projectCoresKey, SystemInfo.processorCount),
-				UseShellExecute = false,
-				RedirectStandardError = true,
-				CreateNoWindow = true,
-				ErrorDialog = true,
-				WorkingDirectory = project.FullName
-			},
-			EnableRaisingEvents = true
-		};
+		Process buildProcess = CreateProcess(
+			"cmd.exe",
+			"/c make -j" + PlayerPrefs.GetInt(settings.projectCoresKey, SystemInfo.processorCount),
+			true
+		);
 
 		isWaiting = true;
 		buildProcess.Exited += (s, e) => isWaiting = false;
@@ -401,19 +427,11 @@ public class ProjectExplorer : Panel
 
 	private void StartGame()
 	{
-		Process playProcess = new Process()
-		{
-			StartInfo = new ProcessStartInfo
-			{
-				FileName = "C:\\Program Files\\mGBA\\mGBA.exe",
-				Arguments = Path.Combine(project.FullName, project.Name + ".gba"),
-				UseShellExecute = false,
-				RedirectStandardError = true,
-				CreateNoWindow = true,
-				ErrorDialog = true
-			},
-			EnableRaisingEvents = true
-		};
+		Process playProcess = CreateProcess(
+			"C:\\Program Files\\mGBA\\mGBA.exe",
+			Path.Combine(project.FullName, project.Name + ".gba"),
+			true
+		);
 
 		playProcess.Exited += (s, e) => isWaiting = false;
 		StartCoroutine(WaitForError(playProcess));
@@ -429,5 +447,22 @@ public class ProjectExplorer : Panel
 
 		if (!string.IsNullOrEmpty(errors))
 			GeneralManager.PopError(settings.projectPlayError + "\n" + errors.Split('\n')[0]);
+	}
+
+	private Process CreateProcess(string application, string arguments, bool enableEvents)
+	{
+		return new Process()
+		{
+			StartInfo = new ProcessStartInfo
+			{
+				FileName = application,
+				Arguments = arguments,
+				UseShellExecute = false,
+				RedirectStandardError = true,
+				CreateNoWindow = true,
+				ErrorDialog = true
+			},
+			EnableRaisingEvents = enableEvents
+		};
 	}
 }

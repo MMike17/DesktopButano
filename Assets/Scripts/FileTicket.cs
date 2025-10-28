@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using TMPro;
 using UnityEngine;
@@ -17,7 +18,9 @@ public class FileTicket : MonoBehaviour
 	public Button moveButton;
 	public Button deleteButton;
 
-	public void Init(FileInfo file, FileType type, Action<bool> OnSelect, Action OnMove, Action<FileInfo> OnDelete)
+	private float delay;
+
+	public void Init(FileInfo file, FileType type, Action<bool> OnSelect, Action OnOpen, Action OnMove, Action<FileInfo> OnDelete)
 	{
 		gameObject.SetActive(true);
 
@@ -31,7 +34,18 @@ public class FileTicket : MonoBehaviour
 		};
 
 		selectButton.onClick.RemoveAllListeners();
-		selectButton.onClick.AddListener(() => OnSelect?.Invoke(flagText.enabled));
+		selectButton.onClick.AddListener(() =>
+		{
+			OnSelect?.Invoke(flagText.enabled);
+
+			if (Time.time - delay < GeneralSettings.Get().fileClickDelay)
+			{
+				delay = 0;
+				OnOpen?.Invoke();
+			}
+			else
+				delay = Time.time;
+		});
 
 		moveButton.onClick.RemoveAllListeners();
 		moveButton.onClick.AddListener(() => OnMove());

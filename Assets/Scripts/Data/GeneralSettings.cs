@@ -85,10 +85,20 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public string assetImportErrorFormat;
 	[TextArea]
 	public string imageImportErrorFormat;
+	[Space]
+	[TextArea]
+	public string noToolErrorFormat;
+	[TextArea]
+	public string imageToolErrorFormat;
+	[Space]
 	[TextArea]
 	public string assetMoveMessageFormat;
+	[Space]
 	[TextArea]
 	public string assetDeleteMessageFormat;
 	[TextArea]
 	public string assetDeleteErrorFormat;
+
+	[Header(nameof(FileTicket))]
+	public float fileClickDelay;
 }

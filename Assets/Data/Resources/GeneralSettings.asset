@@ -66,6 +66,14 @@ MonoBehaviour:
 
     Butano only supports 4
     or 8 bits per pixel format, asset has {1} bits per pixel.'
+  noToolErrorFormat: 'Could''nt find tools for asset type {0}.
+
+    Provide the path
+    to a supported application in the Engine settings.'
+  imageToolErrorFormat: 'Couldn''t open {0} with provided tool.
+
+    {1}'
   assetMoveMessageFormat: Which folder to you want to move {0} to ?
   assetDeleteMessageFormat: Are you sure you want to remove {0} ?
   assetDeleteErrorFormat: Couldn't remove {0}.
+  fileClickDelay: 0.3

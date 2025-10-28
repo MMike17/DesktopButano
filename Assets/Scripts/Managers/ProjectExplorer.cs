@@ -3,14 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using B83.Image.BMP;
 using B83.Win32;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
-using Debug = UnityEngine.Debug;
 
 /// <summary>Used to explore projects and operate on assets</summary>
 public class ProjectExplorer : Panel
@@ -26,22 +23,7 @@ public class ProjectExplorer : Panel
 	public Button openFolderButton;
 	[Space]
 	public Transform explorerList;
-	[Space]
-	public TMP_Text detailsNameText;
-	public TMP_Text detailsExtensionText;
-	public TMP_Text detailsSizeText;
-	public GameObject detailsWarning;
-	public TMP_Text detailsWarningText;
-	[Space]
-	public GameObject imageDetails;
-	public GameObject imagePreview;
-	public TMP_Text imageDetailsDimentions;
-	public RawImage imagePreviewTexture;
-	[Space]
-	public GameObject codeDetails;
-	public GameObject codePreview;
-	public TMP_Text codeDetailsLines;
-	public TMP_Text codePreviewText;
+	public AssetDetailsPanel assetDetailsPanel;
 	[Space]
 	public Panel settingsPanel;
 	public Button settingsSaveButton;
@@ -61,17 +43,14 @@ public class ProjectExplorer : Panel
 	private FileType selectedType;
 	private DirectoryInfo project;
 	private GeneralSettings settings;
-	private BMPLoader bmpLoader;
 	private List<FileTicket> tickets;
 	private List<string> makefileLines;
-	private FileInfo selected;
 	private bool isWaiting;
 
 	private void Awake()
 	{
 		tickets = new List<FileTicket>();
 		settings = GeneralSettings.Get();
-		bmpLoader = new BMPLoader();
 
 		selectedType = FileType.code;
 	}
@@ -100,8 +79,8 @@ public class ProjectExplorer : Panel
 		else
 			dragAndDropPanel.gameObject.SetActive(false);
 
-		if (selected != null && Input.GetKeyDown(KeyCode.Delete))
-			DeleteAsset(selected);
+		if (assetDetailsPanel.selected != null && Input.GetKeyDown(KeyCode.Delete))
+			DeleteAsset(assetDetailsPanel.selected);
 	}
 
 	public void Pop(DirectoryInfo project, Action OnReturn)
@@ -181,7 +160,6 @@ public class ProjectExplorer : Panel
 		});
 
 		// TODO : Asset type selectors
-		// TODO : Preview Sound
 		// TODO : Open asset with external program
 		// TODO : Rename project
 		// TODO : Check assets before build
@@ -207,60 +185,7 @@ public class ProjectExplorer : Panel
 				tickets.Add(ticket);
 			}
 
-			ticket.Init(file, selectedType, valid =>
-			{
-				selected = file;
-
-				detailsNameText.text = file.Name.Replace(file.Extension, "");
-				detailsExtensionText.text = file.Extension;
-				detailsSizeText.text = file.Length + "o";
-
-				imageDetails.SetActive(selectedType == FileType.image);
-				imagePreview.SetActive(selectedType == FileType.image);
-
-				codeDetails.SetActive(selectedType == FileType.code);
-				codePreview.SetActive(selectedType == FileType.code);
-
-				switch (selectedType)
-				{
-					case FileType.image:
-						detailsWarning.SetActive(valid);
-						detailsWarningText.text = settings.detailsImageWarning;
-						Texture2D texture = null;
-
-						try
-						{
-							texture = bmpLoader.LoadBMP(file.FullName).ToTexture2D();
-						}
-						catch (Exception ex)
-						{
-							Debug.Log(ex);
-						}
-
-						imagePreviewTexture.enabled = texture != null;
-
-						if (imagePreviewTexture.enabled)
-							imagePreviewTexture.texture = texture;
-
-						imageDetailsDimentions.text = texture.width + "x" + texture.height;
-						break;
-
-					case FileType.code:
-						detailsWarning.SetActive(valid);
-						detailsWarningText.text = settings.detailsCodeWarning;
-
-						string content = string.Empty;
-						string[] lines = File.ReadAllLines(file.FullName);
-
-						for (int i = 0; i < Mathf.Min(lines.Length, settings.detailsCodeMaxLines); i++)
-							content += lines[i] + "\n";
-
-						content.TrimEnd('\n');
-						codePreviewText.text = content;
-						codeDetailsLines.text = lines.Length.ToString();
-						break;
-				}
-			},
+			ticket.Init(file, selectedType, valid => assetDetailsPanel.ShowDetails(file, selectedType, valid),
 			() =>
 			{
 				List<string> choices = new List<string>(Enum.GetNames(typeof(FileType)));

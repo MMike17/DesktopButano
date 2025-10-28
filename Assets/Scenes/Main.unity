@@ -7768,6 +7768,7 @@ GameObject:
   - component: {fileID: 703275588}
   - component: {fileID: 703275587}
   - component: {fileID: 703275586}
+  - component: {fileID: 703275589}
   m_Layer: 5
   m_Name: Preview
   m_TagString: Untagged
@@ -7852,6 +7853,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 703275584}
   m_CullTransparentMesh: 1
+--- !u!114 &703275589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703275584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d9f751b486465a46b550faa785182dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detailsNameText: {fileID: 596690515}
+  detailsExtensionText: {fileID: 1696477639}
+  detailsSizeText: {fileID: 1884068135}
+  detailsWarning: {fileID: 1808703206}
+  detailsWarningText: {fileID: 678153885}
+  imageDetails: {fileID: 1755852280}
+  imagePreview: {fileID: 97242260}
+  imageDetailsDimentions: {fileID: 1332523857}
+  imagePreviewTexture: {fileID: 1929703684}
+  codeDetails: {fileID: 1031783977}
+  codePreview: {fileID: 897029875}
+  codeDetailsLines: {fileID: 1805330620}
+  codePreviewText: {fileID: 1692393124}
 --- !u!1 &738903584
 GameObject:
   m_ObjectHideFlags: 0
@@ -9384,7 +9410,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &846641966
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20191,19 +20217,7 @@ MonoBehaviour:
   codeToggle: {fileID: 663024181}
   openFolderButton: {fileID: 1233199536}
   explorerList: {fileID: 1529322808}
-  detailsNameText: {fileID: 596690515}
-  detailsExtensionText: {fileID: 1696477639}
-  detailsSizeText: {fileID: 1884068135}
-  detailsWarning: {fileID: 1808703206}
-  detailsWarningText: {fileID: 678153885}
-  imageDetails: {fileID: 1755852280}
-  imagePreview: {fileID: 97242260}
-  imageDetailsDimentions: {fileID: 1332523857}
-  imagePreviewTexture: {fileID: 1929703684}
-  codeDetails: {fileID: 1031783977}
-  codePreview: {fileID: 897029875}
-  codeDetailsLines: {fileID: 1805330620}
-  codePreviewText: {fileID: 1692393124}
+  assetDetailsPanel: {fileID: 703275589}
   settingsPanel: {fileID: 1650483282}
   settingsSaveButton: {fileID: 898898352}
   settingsRomNameInput: {fileID: 527567156}

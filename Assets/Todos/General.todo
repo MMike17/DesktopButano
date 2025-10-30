@@ -17,10 +17,10 @@ x Import asset(s)
 x Check if bmp images have 16 or 256 colors on import
 x Open file with linked app
 x Explore files : other
-- Explore files : sound
+x Should I refactor for a cmd method/class ?
+x Explore files : sound
 - Settings for cores
 - Add project last opened date
-- Should I refactor for a cmd method/class ?
 - Should I add a thing for the headers ? (include folder)
 - What are the details I need to know about a "code" asset ?
 - Check if bmp has compression on import
@@ -34,3 +34,6 @@ x Explore files : other
 - Add panel for asset configuration : sound
 - Add panel for asset configuration : code
 - Pop configuration panel on import
+- What the hell is the DMG channel thing about sounds ?
+- Sound assets don't need a json file if they're not DMG
+- Add preview for sound files

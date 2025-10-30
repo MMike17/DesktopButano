@@ -69,6 +69,7 @@ public class GeneralSettings : StaticScriptableObject<GeneralSettings>
 	public FileTicket explorerFilePrefab;
 	public string explorerImageFolder;
 	public string explorerCodeFolder;
+	public string explorerSoundFolder;
 	[Space]
 	[TextArea]
 	public string detailsImageWarning;

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using B83.Win32;
-using SimpleFileBrowser;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,6 +20,7 @@ public class ProjectExplorer : Panel
 	[Space]
 	public Toggle imageToggle;
 	public Toggle codeToggle;
+	public Toggle soundToggle;
 	public Toggle otherToggle;
 	public Button openFolderButton;
 	[Space]
@@ -40,6 +40,7 @@ public class ProjectExplorer : Panel
 		ERROR,
 		code,
 		image,
+		sound,
 		other
 	}
 
@@ -156,6 +157,17 @@ public class ProjectExplorer : Panel
 			}
 		});
 
+		soundToggle.onValueChanged.RemoveAllListeners();
+		soundToggle.onValueChanged.AddListener(value =>
+		{
+			if (value)
+			{
+				selectedType = FileType.sound;
+				soundToggle.transform.SetAsLastSibling();
+				RefreshExplorer();
+			}
+		});
+
 		otherToggle.onValueChanged.RemoveAllListeners();
 		otherToggle.onValueChanged.AddListener(value =>
 		{
@@ -174,13 +186,13 @@ public class ProjectExplorer : Panel
 			{
 				FileType.image => settings.explorerImageFolder,
 				FileType.code => settings.explorerCodeFolder,
+				FileType.sound => settings.explorerSoundFolder,
 				FileType.other => settings.projectCustomDirName
 			};
 
 			Process.Start("explorer.exe", Path.Combine(project.FullName, targetFolder).Replace("/", "\\"));
 		});
 
-		// TODO : Asset type selectors
 		// TODO : Rename project
 		// TODO : Check assets before build
 
@@ -244,6 +256,7 @@ public class ProjectExplorer : Panel
 		{
 			FileType.image => settings.explorerImageFolder,
 			FileType.code => settings.explorerCodeFolder,
+			FileType.sound => settings.explorerSoundFolder,
 			FileType.other => settings.projectCustomDirName
 		};
 	}
@@ -358,13 +371,25 @@ public class ProjectExplorer : Panel
 
 	private FileType GetFileType(FileInfo file)
 	{
-		return file.Extension switch
+		switch (file.Extension)
 		{
-			".bmp" => FileType.image,
-			".cpp" => FileType.code,
-			_ => FileType.ERROR
-			// TODO : Add support for sound files here
-		};
+			case ".bmp":
+				return FileType.image;
+
+			case ".cpp":
+				return FileType.code;
+
+			case ".mod":
+			case ".xm":
+			case ".s3m":
+			case ".it":
+			case ".wav":
+				return FileType.sound;
+			// not the same formats for DMG sounds
+
+			default:
+				return FileType.ERROR;
+		}
 	}
 
 	private void MoveAsset(FileInfo file, FileType target)
@@ -380,7 +405,7 @@ public class ProjectExplorer : Panel
 		{
 			FileType.image => PlayerPrefs.GetString(settings.projectImageKey, ""),
 			FileType.code => PlayerPrefs.GetString(settings.projectCodeKey, ""),
-			// TODO : Add support for sound assets
+			FileType.sound => PlayerPrefs.GetString(settings.projectSoundKey, ""),
 		};
 
 		if (string.IsNullOrWhiteSpace(toolPath))
